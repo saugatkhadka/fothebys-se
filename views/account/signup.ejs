@@ -1,0 +1,70 @@
+<% include ../partials/header %>
+
+<div class="container">
+    <!--include partials/flash-->
+    <!-- Flash Messages -->
+    <% if (messages.errors){ %>
+    <div class="alert alert-danger fade show">
+        <button class="close" type="button" data-dismiss="alert"><i class="far fa-times-circle"></i></button>
+        <% messages.errors.forEach(function(error){ %>
+            <div>
+                <%= error.msg %>
+            </div>
+        <% }) %>
+    </div>
+    <% } else if (messages.info ) { %>
+        <div class="alert alert-info fade show">
+            <button class="close" type="button" data-dismiss="alert"><i class="far fa-times-circle"></i></button>
+            <% messages.info.forEach(function(info){ %>
+                <div>
+                    <%= info.msg %>
+                </div>
+            <% }) %>
+        </div>
+    <% } else if (messages.success ) { %>
+        <div class="alert alert-success fade show">
+            <button class="close" type="button" data-dismiss="alert"><i class="far fa-times-circle"></i></button>
+            <% messages.success.forEach(function(success){ %>
+                <div>
+                    <%= success.msg %>
+                </div>
+            <% }) %>
+        </div>
+    <% } %>
+
+    <div class="pb-2 mt-2 mb-4 border-bottom">
+        <h3>Sign up</h3>
+    </div>
+    <form id="signup-form" action="/signup" method="POST">
+        <input type="hidden" name="_csrf" value=<%= _csrf %> />
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label font-weight-bold text-right" for="email">Email</label>
+            <div class="col-md-7">
+                <input class="form-control" type="email" name="email" id="email" placeholder="Email" autofocus="autofocus"
+                    autocomplete="email" required="required" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label font-weight-bold text-right" for="password">Password</label>
+            <div class="col-md-7">
+                <input class="form-control" type="password" name="password" id="password" placeholder="Password"
+                    autocomplete="new-password" required="required" />
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-md-3 col-form-label font-weight-bold text-right" for="confirmPassword">Confirm
+                Password</label>
+            <div class="col-md-7">
+                <input class="form-control" type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password"
+                    autocomplete="new-password" required="required" />
+            </div>
+        </div>
+        <div class="form-group offset-sm-3 col-md-7 pl-2">
+            <button class="btn btn-success" type="submit"><i class="fas fa-user-plus fa-sm"></i>Signup</button>
+        </div>
+    </form>
+
+</div>
+<!--include partials/footer-->
+<!-- Footer -->
+<% include ../partials/footer %>

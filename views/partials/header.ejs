@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#4DA5F4">
+    <meta name="csrf-token">
+    <title> - Hackathon Starter</title>
+    <link rel="shortcut icon" href="/favicon.png">
+    <link rel="stylesheet" href="/css/main.css">
+    <script src="/js/lib/Chart.min.js"></script>
+</head>
+
+<body>
+    <!--include partials/header-->
+    <!-- Navbar -->
+    <div class="navbar navbar-light fixed-top navbar-expand-lg">
+        <div class="container"><a class="navbar-brand" href="/"><i class="fas fa-cube"></i>Project name</a><button
+                class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse"><span class="sr-only">Toggle
+                    navigation</span><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/api">API Examples</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/status">Status</a></li>
+                </ul>
+                <ul class="nav navbar-nav ml-auto">
+                    <% if(!user) {%>
+                    <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/signup">Create Account</a></li>
+                    <% } else { %>
+                    <li class="dropdown nav-item">
+                        <a class="dropdown-toggle nav-link" href="#" data-toggle="dropdown">
+                            <% if (user.profile.picture){ %>
+                            <img src="<%= user.profile.picture %>">
+                            <% } else { %>
+                            <img src="<%= user.gravatar(60) %>">
+                            <% } %>
+                            <span><%= user.profile.name || user.email || user.id %></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-item">
+                                <a href="/account">My Account</a>
+                            </li>
+                            <li class="divider dropdown-item">
+                            </li>
+                            <li class="dropdown-item">
+                                <a href="/logout">Logout</a>
+                            </li>
+                        </ul>
+
+                    </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </div>
