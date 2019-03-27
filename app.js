@@ -20,7 +20,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+
 //Login
 app.use('/login', function(req, res, next){
   res.render('main/login', {
@@ -28,11 +28,35 @@ app.use('/login', function(req, res, next){
   });
 });
 
+// Users
+// User Dashboard
 app.use('/dashboard', function(req, res, next){
   res.render('users/dashboard', {
     title: 'Dashboard'
   });
 });
+
+
+// Admin
+// Admin Dashboard
+app.use('/admin', function(req, res, next){
+  res.render('admin/admin', {
+    title: 'Admin Dashboard'
+  });
+});
+// View Users
+app.use('/users', function (req, res, next) {
+  res.render('admin/users', {
+    title: "Users"
+  });
+});
+
+app.use('/users/new', function (req, res, next) {
+  res.render('admin/addUsers', {
+    title: "Add Users"
+  });
+});
+
 
 //test page for testing the bootstrap dashboard panel
 app.use('/test', function (req, res, next) {
