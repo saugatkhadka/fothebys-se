@@ -19,10 +19,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+
+// ROUTES
+// Main Route
+app.get('/', indexRouter);
 
 //Login
-app.use('/login', function(req, res, next){
+app.get('/login', function(req, res, next){
   res.render('main/login', {
     title: "Login"
   });
@@ -30,36 +33,53 @@ app.use('/login', function(req, res, next){
 
 // Users
 // User Dashboard
-app.use('/dashboard', function(req, res, next){
+app.get('/dashboard', function(req, res, next){
   res.render('users/dashboard', {
     title: 'Dashboard'
   });
 });
 
-
 // Admin
 // Admin Dashboard
-app.use('/admin', function(req, res, next){
+app.get('/admin', function(req, res, next){
   res.render('admin/admin', {
     title: 'Admin Dashboard'
   });
 });
-// View Users
-app.use('/users', function (req, res, next) {
-  res.render('admin/users', {
-    title: "Users"
+// // View Users
+// app.get('/admin/users', function (req, res, next) {
+//   res.render('admin/users', {
+//     title: "Users"
+//   });
+// });
+
+// app.get('/admin/users/new', function (req, res, next) {
+//   res.render('admin/addUsers', {
+//     title: "Add Users"
+//   });
+// });
+
+// Auction View
+app.get('/admin/auction', function(req, res, next){
+  res.render('admin/auction', {
+    title: 'Auction'
   });
 });
 
-app.use('/users/new', function (req, res, next) {
-  res.render('admin/addUsers', {
-    title: "Add Users"
+// Item Add Form
+app.get('/admin/item/add', function (req, res, next) {
+  res.render('admin/addItem', {
+    title: 'Add Item'
   });
 });
+
+
+
+
 
 
 //test page for testing the bootstrap dashboard panel
-app.use('/test', function (req, res, next) {
+app.get('/test', function (req, res, next) {
   res.render('main/test', {
     title: "Test"
   });

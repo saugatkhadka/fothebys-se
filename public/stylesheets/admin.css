@@ -21,10 +21,12 @@ body {
 
 body {
     padding-top: 56px;
+    background-image: url("https://ir.ebaystatic.com/pictures/aw/pics/cmp/ds3/imgbg.jpg");
 }
 
-#root {
-    margin-top: 15px;
+.box {
+    margin: 15px 0;
+    background-color: white;
 }
 
 @media (max-width: 991.98px) {
