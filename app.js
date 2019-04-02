@@ -2,15 +2,13 @@ var createError = require('http-errors'),
     express     = require('express'),
     app         = express(),
     bodyParser  = require("body-parser"),
+    // Allowing the env file to load and use env variables in .env file
+    dotenv      = require('dotenv').config(),
     mongoose    = require('mongoose'),
     path        = require('path'),
     cookieParser = require('cookie-parser'),
     logger      = require('morgan');
 
-/**
- * Load environment variables from .env file, where API keys and passwords are configured.
- */
-dotenv.load({ path: '.env' });
 
 // For temporary use only
 // Needs refactor
