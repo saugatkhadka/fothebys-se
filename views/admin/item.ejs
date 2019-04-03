@@ -1,0 +1,63 @@
+<% include ../partials/adminHeader %>
+
+<div class="container">
+    <!-- Item Details -->
+    <div class="container box">
+
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1 class="h2">Items</h1>
+            <div class="btn-toolbar mb-2 mb-md-0">
+                <div class="btn-group mr-2">
+                    <a href="/admin/item/new">
+                        <button type="button" class="btn btn-sm btn-outline-secondary">Add Item</button>
+                    </a>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Add xxx </button>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
+                    <span data-feather="calendar"></span>
+                    This week
+                </button>
+            </div>
+        </div>
+
+        <!-- Item Table -->
+        <table class="table table-sm">
+		  <thead>
+		    <tr>
+		      <th scope="col">#</th>
+		      <th scope="col">Item Title</th>
+		      <th scope="col">Category</th>
+		      <th scope="col">Classification</th>
+		      <th scope="col">Artist</th>
+		      <th scope="col">Year</th>
+		      <th scope="col">Description</th>
+		      <th scope="col">Auction Date</th>
+		      <th scope="col">Estimated Price</th>
+		    </tr>
+		  </thead>
+		  <tbody>
+		  	<!-- Data from the DB -->
+
+		  	<% items.forEach((item) => { %>
+			<tr>
+		      <th scope="row"><%= item._id %></th>
+		      <td><%= item.title %></td>
+		      <td><%= item.category %></td>
+		      <td><%= item.classification %></td>
+		      <td><%= item.artistName %></td>
+		      <td><%= item.yearProduced %></td>
+		      <td><%= item.itemDesc %></td>
+		      <td><%= item.auctionDate %></td>
+		      <td><%= item.estimatedPrice %></td>
+		    </tr>
+
+		  	<% }); %>
+		    
+		  </tbody>
+		</table>
+
+    </div>
+
+</div>
+
+<% include ../partials/adminFooter %>

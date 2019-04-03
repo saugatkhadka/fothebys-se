@@ -111,7 +111,21 @@ app.get('/admin/auction', function(req, res){
 // No current page view
 // TODO: Add new page
 app.get("/admin/item", function(req, res){
-  res.send("ITEM PAGE");
+
+  Item.find({},(err, founditems) => {
+      if(err) {return next(err)};
+      // TODO: Implement a way to display errors for already exisiting item
+      if(founditems) { 
+        console.log(founditems);
+        res.render('admin/item', {
+          title: 'Items',
+          items: founditems
+        });
+      };
+    }
+  );
+
+  
 });
 
 // Item registration form
