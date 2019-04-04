@@ -91,14 +91,39 @@
                             <!-- Provides the category of the item -->
                             <div class="col-md-6 mb-3">
                                 <label for="category">Category</label>
-                                <select class="custom-select d-block w-100" id="category" name="item[category]" required>
+                                <div>
+                                    <div class="custom-control custom-radio">
+                                      <input type="radio" id="drawingCategory" name="itemCategory" class="custom-control-input" onclick="handleClick(this);">
+                                      <label class="custom-control-label" for="drawingCategory">Drawing</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                      <input type="radio" id="paintingCategory" name="itemCategory" class="custom-control-input" onclick="handleClick(this);">
+                                      <label class="custom-control-label" for="paintingCategory">Painting</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                      <input type="radio" id="photoCategory" name="itemCategory" class="custom-control-input" onclick="handleClick(this);">
+                                      <label class="custom-control-label" for="photoCategory">Photographic Images</label>
+                                    </div>
+                                   <div class="custom-control custom-radio">
+                                      <input type="radio" id="sculpturesCategory" name="itemCategory" class="custom-control-input" onclick="handleClick(this);">
+                                      <label class="custom-control-label" for="sculpturesCategory">Sculptures</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                      <input type="radio" id="carvingsCategory" name="itemCategory" class="custom-control-input" onclick="handleClick(this);">
+                                      <label class="custom-control-label" for="carvingsCategory">Carvings</label>
+                                    </div>
+
+                                    
+                                </div>
+                                
+                                <!-- <select class="custom-select d-block w-100" id="category" name="item[category]" required>
                                     <option value="">Choose...</option>
                                     <option>Drawing</option>
                                     <option>Painting</option>
                                     <option>Photographic Images</option>
                                     <option>Sculptures</option>
                                     <option>Carvings</option>
-                                </select>
+                                </select> -->
 
                                 <div class="invalid-feedback">
                                     Please select a valid classification
@@ -171,8 +196,34 @@
                                 </div>
                             </div>
                         </div>
-                        <hr class="mb-4">
 
+                        <hr class="mb-4">
+                        <h4 class="mb-3">Category Information</h4>
+                        <!-- TODO: Change drawing and painting medium to select input type  -->
+                        <!-- Drawing Medium -->
+                        <div class="mb-3">
+                            <label for="drawingMedium">Drawing Medium</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="drawingMedium" placeholder="Drawing Medium" name="item[drawingMedium]" required>
+                                <div class="invalid-feedback">
+                                    Item's method of drawing is required
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Painting Medium -->
+                        <div class="mb-3">
+                            <label for="paintingMedium">Painting Medium</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="paintingMedium" placeholder="Painting Medium" name="item[paintingMedium]" required>
+                                <div class="invalid-feedback">
+                                    Item's method of painting is required
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <hr class="mb-4">
                         <h4 class="mb-3">Auction Details</h4>
                         <!-- TODO: See if this input should be decided after the pending list is verified -->
                         <!-- Auction Date -->
@@ -338,5 +389,25 @@
     </div>
 
 </div>
-<script src="\javascripts\form-validation.js"></script>
+<!-- TODO: Enable the form validation script after the tests are complete -->
+<script type="text/javascript">
+    // var drawingCategory = document.getElementById('drawingCategory');
+    // drawingCategory.onClick
+    // console.log(drawingCategory);
+
+    function handleClick(radioCategory){
+        // Clearing all disabled form input so it doesn't persist
+        document.getElementById('drawingMedium').disabled = false;
+        document.getElementById('paintingMedium').disabled = false;
+
+        // Disabling the form inputs according to the category
+        if(radioCategory.id == "drawingCategory"){
+            document.getElementById('paintingMedium').disabled = true;
+        } else if (radioCategory.id == "paintingCategory"){
+            document.getElementById('drawingMedium').disabled = true;
+        }
+    }
+    
+</script>
+<!-- <script src="\javascripts\form-validation.js"></script> -->
 <% include ../partials/adminFooter %>

@@ -21,7 +21,7 @@ body {
 
 body {
     padding-top: 56px;
-    background-image: url("https://ir.ebaystatic.com/pictures/aw/pics/cmp/ds3/imgbg.jpg");
+    background-color: #ddd;
 }
 
 .box {
@@ -109,4 +109,15 @@ body {
 
 .lh-150 {
     line-height: 1.5;
+}
+
+
+/*Admin Panel Styling*/
+.box {
+    border-radius: 4px;
+    background-color: #fff;
+    margin-left: auto;
+    margin-right: auto;
+    /*width: 1280px;*/
+    margin-top: 50px;
 }

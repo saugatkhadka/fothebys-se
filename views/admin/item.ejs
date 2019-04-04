@@ -1,10 +1,10 @@
 <% include ../partials/adminHeader %>
 
-<div class="container">
+<div class="container main">
     <!-- Item Details -->
     <div class="container box">
 
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
             <h1 class="h2">Items</h1>
             <div class="btn-toolbar mb-2 mb-md-0">
                 <div class="btn-group mr-2">
@@ -21,40 +21,50 @@
         </div>
 
         <!-- Item Table -->
-        <table class="table table-sm">
-		  <thead>
-		    <tr>
-		      <th scope="col">#</th>
-		      <th scope="col">Item Title</th>
-		      <th scope="col">Category</th>
-		      <th scope="col">Classification</th>
-		      <th scope="col">Artist</th>
-		      <th scope="col">Year</th>
-		      <th scope="col">Description</th>
-		      <th scope="col">Auction Date</th>
-		      <th scope="col">Estimated Price</th>
-		    </tr>
-		  </thead>
-		  <tbody>
-		  	<!-- Data from the DB -->
+        <div class="table-responsive">
+	        <table class="table table-sm">
+			  <thead>
+			    <tr>
+			      <th scope="col">UID</th>
+			      <th scope="col">Item Title</th>
+			      <th scope="col">Category</th>
+			      <th scope="col">Classification</th>
+			      <th scope="col">Artist</th>
+			      <th scope="col">Year</th>
+			      <th scope="col">Description</th>
+			      <th scope="col">Auction Date</th>
+			      <th scope="col">Estimated Price</th>
+			    </tr>
+			  </thead>
+			  <tbody>
+			  	<!-- Data from the DB -->
 
-		  	<% items.forEach((item) => { %>
-			<tr>
-		      <th scope="row"><%= item._id %></th>
-		      <td><%= item.title %></td>
-		      <td><%= item.category %></td>
-		      <td><%= item.classification %></td>
-		      <td><%= item.artistName %></td>
-		      <td><%= item.yearProduced %></td>
-		      <td><%= item.itemDesc %></td>
-		      <td><%= item.auctionDate %></td>
-		      <td><%= item.estimatedPrice %></td>
-		    </tr>
+			  	<% items.forEach((item) => { %>
+				<tr>
+			      <th scope="row"><%= item.uid %></th>
+			      <td><%= item.title %></td>
+			      <td><%= item.category %></td>
+			      <td><%= item.classification %></td>
+			      <td><%= item.artistName %></td>
+			      <td><%= item.yearProduced %></td>
+			      <td><%= item.itemDesc %></td>
+			      <td><%= item.auctionDate %></td>
+			      <td><%= item.estimatedPrice %></td>
+			      <th scope="row">
+					<a href="/admin/item/<%= item._id %>">Edit</a>
+					<a href="#">Delete</a>
+					<a href="#">Archive</a>
+			      </th>
+			      
 
-		  	<% }); %>
-		    
-		  </tbody>
-		</table>
+			    </tr>
+
+			  	<% }); %>
+			    
+			  </tbody>
+			</table>
+        </div>
+
 
     </div>
 

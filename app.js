@@ -15,6 +15,7 @@ var createError = require('http-errors'),
 // TODO: Refactor the routers and the controllers
 // DB Models
 var Item = require("./models/item");
+var Counter = require('./models/counter');
 
 // Routers
 var indexRouter = require('./routes/index');
@@ -116,7 +117,7 @@ app.get("/admin/item", function(req, res){
       if(err) {return next(err)};
       // TODO: Implement a way to display errors for already exisiting item
       if(founditems) { 
-        console.log(founditems);
+        // console.log(founditems);
         res.render('admin/item', {
           title: 'Items',
           items: founditems
@@ -124,12 +125,11 @@ app.get("/admin/item", function(req, res){
       };
     }
   );
-
-  
 });
 
 // Item registration form
 app.get('/admin/item/new', function (req, res) {
+
   res.render('admin/addItem', {
     title: 'Add Item'
   });
@@ -138,43 +138,98 @@ app.get('/admin/item/new', function (req, res) {
 // New Item creation POST routes
 // Handles creating new item/piece
 app.post('/admin/item', function(req, res){
+  
+  // Creates/Initializes the counter for the first time
+    // Counter.create({lastCounter: 0}, (err, counter) => {
+    //   if(err) {
+    //     console.log("ERROR WITH THE COUNTER");
+    //     res.redirect("back");
+    //   } else {
+    //     counter.save();
+    //     console.log("COUNTER SAVED");
+    //     res.redirect("back");
+    //   }
+    // });
 
-  const item = new Item({
-    title: req.body.item.title,  
-    category: req.body.item.category, 
-    classification: req.body.item.classification, 
-    artistName: req.body.item.artistName, 
-    yearProduced: req.body.item.yearProduced, 
-    itemDesc: req.body.item.itemDesc, 
-    auctionDate: req.body.item.auctionDate,  
-    estimatedPrice: req.body.item.estimatedPrice
+
+  // TODO: Fix the way that counter updates
+  // Right now, the counter updates regardless of whether or not something saves to the Item collection
+  // Change it so that counter is only updated when the item is successfully saved
+
+
+  // Updates the counter each time
+   Counter.findOne({}, (err, counter) => {
+    Counter.findOneAndUpdate(counter._id, {lastCounter: Number(counter.lastCounter) + 1}, (err, updatedCounter) => {
+      // console.log("Counter: " + updatedCounter.lastCounter);
+      var uidCounter = updatedCounter.lastCounter.toString().padStart(8, "0");
+
+      // Creating new Item
+      const item = new Item({
+        // padStart() pads the current string with another specified string with (for now) 0.
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart
+        // This adds '0' before the unique 8 digit number to meet the criteria
+        // Since storing the unique number with leading zeros in mongodb removes the leading zeros
+        // the number is stored as string and increased using a counter with a function
+        // estimatedPrice: req.body.item.estimatedPrice.padStart(8, "0")
+        // uid: TODO: call counter from the funtion and add here, along with .padStart(8, "0")
+
+        uid: uidCounter,
+
+        // title: req.body.item.title,  
+        // category: req.body.item.category, 
+        // classification: req.body.item.classification, 
+        // artistName: req.body.item.artistName, 
+        // yearProduced: req.body.item.yearProduced, 
+        // itemDesc: req.body.item.itemDesc, 
+        // auctionDate: req.body.item.auctionDate,  
+        // estimatedPrice: req.body.item.estimatedPrice
+
+        // Test Data
+        title: "test3",  
+        category: "Painting", 
+        classification: "Nude", 
+        artistName: "Harambe", 
+        yearProduced: 1998, 
+        itemDesc: "Nothing you need to know", 
+        auctionDate: "2019-04-04",  
+        estimatedPrice: 120000,
+        categoryInfo: {
+          drawingMedium: "Pencil"
+        }
+
+      });
+
+      // TODO: Create a new serial number for the item/piece to be inserted into the DB
+      // TODO: This should search for the serial number and see if they match, and throw error then
+
+      Item.findOne({
+          title: req.body.item.title
+        },(err, founditem) => {
+          if(err) {return next(err)};
+          // TODO: Implement a way to display errors for already exisiting item
+          if(founditem) { 
+            console.log("This item already exists"); 
+            return res.redirect("back")
+          };
+          item.save((err) => {
+            if(err) {return next(err)};
+            // TODO: Use flash message to show the successful operation
+            console.log("Item Successfully Added");
+            console.log(item);
+            // Redirects back after success
+            res.redirect("/admin/item");
+          });
+        }
+      );
+    });
   });
-
-  // TODO: Create a new serial number for the item/piece to be inserted into the DB
-  // TODO: This should search for the serial number and see if they match, and throw error then
-
-  Item.findOne({
-      title: req.body.item.title
-    },(err, founditem) => {
-      if(err) {return next(err)};
-      // TODO: Implement a way to display errors for already exisiting item
-      if(founditem) { 
-        console.log("This item already exists"); 
-        return res.redirect("back")
-      };
-      item.save((err) => {
-        if(err) {return next(err)};
-        // TODO: Use flash message to show the successful operation
-        console.log("Item Successfully Added");
-        res.redirect("/admin/item");
-      })
-
-    }
-  );
-
-
-  console.log(req.body.item);
 });
+
+
+// DELETE ROUTE FOR ITEMS
+// app.delete('/admin/item/:id', function(req, res) {
+
+// });
 
 
 

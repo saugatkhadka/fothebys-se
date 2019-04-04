@@ -5,4 +5,4 @@ Simple Auction and Catalogue functionality implemented as a part of a trial for 
 
 ## Project Changelog
  * v1
- - Added item lot entry and viewing functionality
+ 	* Added item lot entry and viewing functionality
