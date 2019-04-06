@@ -9,7 +9,10 @@ const itemSchema = new mongoose.Schema({
 	yearProduced: Number,	
 	itemDesc: String,	
 	auctionDate: String,	
-	estimatedPrice: String,
+	estimatedPrice: {
+		min: String,
+		max: String
+	},
 	categoryInfo: {
 		drawingMedium: String,
 		paintingMedium: String,

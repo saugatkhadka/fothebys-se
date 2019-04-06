@@ -49,9 +49,11 @@
 			      <td><%= item.yearProduced %></td>
 			      <td><%= item.itemDesc %></td>
 			      <td><%= item.auctionDate %></td>
-			      <td><%= item.estimatedPrice %></td>
+			      <td><%= item.estimatedPrice.min %> to <%= item.estimatedPrice.max %></td>
+			      <td><%= item.createdAt %></td>
+
 			      <th scope="row">
-					<a href="/admin/item/<%= item._id %>">Edit</a>
+					<a href="/admin/item/<%= item._id %>/edit">Edit</a>
 					<a href="#">Delete</a>
 					<a href="#">Archive</a>
 			      </th>

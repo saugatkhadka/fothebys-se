@@ -66,7 +66,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', indexRouter);
 
 //Login-----
-app.get('/login', function(req, res){
+app.get('/login', function(req, res, next){
   res.render('main/login', {
     title: "Login"
   });
@@ -74,7 +74,7 @@ app.get('/login', function(req, res){
 
 // Users
 // User Dashboard
-app.get('/dashboard', function(req, res){
+app.get('/dashboard', function(req, res, next){
   res.render('users/dashboard', {
     title: 'Dashboard'
   });
@@ -82,26 +82,26 @@ app.get('/dashboard', function(req, res){
 
 // Admin
 // Admin Dashboard
-app.get('/admin', function(req, res){
+app.get('/admin', function(req, res, next){
   res.render('admin/admin', {
     title: 'Admin Dashboard'
   });
 });
 // // View Users
-// app.get('/admin/users', function (req, res) {
+// app.get('/admin/users', function (req, res, next) {
 //   res.render('admin/users', {
 //     title: "Users"
 //   });
 // });
 
-// app.get('/admin/users/new', function (req, res) {
+// app.get('/admin/users/new', function (req, res, next) {
 //   res.render('admin/addUsers', {
 //     title: "Add Users"
 //   });
 // });
 
 // Auction View
-app.get('/admin/auction', function(req, res){
+app.get('/admin/auction', function(req, res, next){
   res.render('admin/auction', {
     title: 'Auction'
   });
@@ -111,7 +111,7 @@ app.get('/admin/auction', function(req, res){
 // Items Pages
 // No current page view
 // TODO: Add new page
-app.get("/admin/item", function(req, res){
+app.get("/admin/item", function(req, res, next){
 
   Item.find({},(err, founditems) => {
       if(err) {return next(err)};
@@ -128,7 +128,7 @@ app.get("/admin/item", function(req, res){
 });
 
 // Item registration form
-app.get('/admin/item/new', function (req, res) {
+app.get('/admin/item/new', function (req, res, next) {
 
   res.render('admin/addItem', {
     title: 'Add Item'
@@ -137,7 +137,7 @@ app.get('/admin/item/new', function (req, res) {
 
 // New Item creation POST routes
 // Handles creating new item/piece
-app.post('/admin/item', function(req, res){
+app.post('/admin/item', function(req, res, next){
   
   // Creates/Initializes the counter for the first time
     // Counter.create({lastCounter: 0}, (err, counter) => {
@@ -175,29 +175,47 @@ app.post('/admin/item', function(req, res){
 
         uid: uidCounter,
 
-        // title: req.body.item.title,  
-        // category: req.body.item.category, 
-        // classification: req.body.item.classification, 
-        // artistName: req.body.item.artistName, 
-        // yearProduced: req.body.item.yearProduced, 
-        // itemDesc: req.body.item.itemDesc, 
-        // auctionDate: req.body.item.auctionDate,  
-        // estimatedPrice: req.body.item.estimatedPrice
-
-        // Test Data
-        title: "test3",  
-        category: "Painting", 
-        classification: "Nude", 
-        artistName: "Harambe", 
-        yearProduced: 1998, 
-        itemDesc: "Nothing you need to know", 
-        auctionDate: "2019-04-04",  
-        estimatedPrice: 120000,
+        title: req.body.item.title,  
+        category: req.body.item.category, 
+        classification: req.body.item.classification, 
+        artistName: req.body.item.artistName, 
+        yearProduced: req.body.item.yearProduced, 
+        itemDesc: req.body.item.itemDesc, 
+        auctionDate: req.body.item.auctionDate,  
+        estimatedPrice: {
+          min: req.body.item.minEstimatedPrice,
+          max: req.body.item.maxEstimatedPrice
+        },
         categoryInfo: {
-          drawingMedium: "Pencil"
+          drawingMedium: req.body.item.drawingMedium,
+          paintingMedium: req.body.item.paintingMedium,
+          imageType: req.body.item.imageType,
+          materialUsed: req.body.item.materialUsed,
+          dimension: req.body.item.dimension,
+          weight: req.body.item.weight,
+          isFramed: req.body.item.isFramed
         }
 
+
+        // Test Data
+        // title: "test3",  
+        // category: "Painting", 
+        // classification: "Nude", 
+        // artistName: "Harambe", 
+        // yearProduced: 1998, 
+        // itemDesc: "Nothing you need to know", 
+        // auctionDate: "2019-04-04",  
+        // estimatedPrice: {
+        //   min: 12000,
+        //   max: 13000
+        // },
+        // categoryInfo: {
+        //   drawingMedium: "Pencil"
+        // }
+
       });
+
+      console.log(req.body.item);
 
       // TODO: Create a new serial number for the item/piece to be inserted into the DB
       // TODO: This should search for the serial number and see if they match, and throw error then
@@ -207,10 +225,13 @@ app.post('/admin/item', function(req, res){
         },(err, founditem) => {
           if(err) {return next(err)};
           // TODO: Implement a way to display errors for already exisiting item
-          if(founditem) { 
-            console.log("This item already exists"); 
-            return res.redirect("back")
-          };
+          // TODO: Current implementation requires using uid to verify that saved item is unique
+
+          // Since no implementation is done, this statement is commented out
+          // if(founditem) { 
+          //   console.log("This item already exists"); 
+          //   return res.redirect("back")
+          // };
           item.save((err) => {
             if(err) {return next(err)};
             // TODO: Use flash message to show the successful operation
@@ -223,8 +244,26 @@ app.post('/admin/item', function(req, res){
       );
     });
   });
+
 });
 
+app.get('/admin/item/:id/edit', (req,res, next) => {
+  Item.findById({_id: req.params.id}, (err, foundItem) => {
+    if(err) {
+      return next(err);
+      //TODO: Add a error message on return
+      // console.log("Item not found");
+      // res.redirect("back");
+    } else {
+      res.render('admin/editItem', {
+        title: "Edit Item",
+        item: foundItem
+      });
+    }
+    
+  });
+
+});
 
 // DELETE ROUTE FOR ITEMS
 // app.delete('/admin/item/:id', function(req, res) {
