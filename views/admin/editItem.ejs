@@ -1,0 +1,320 @@
+<% include ../partials/adminHeader %>
+
+<div class="container">
+    <!-- Auction Details -->
+    <div class="container box">
+<!--         <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+            <h1>Edit item</h1>
+        </div> -->
+
+        <!-- Add Item Form  --> 
+        <div class="container">
+            <div class="py-5 text-center">
+                <h2>Item Amendment Form</h2>
+                <p class="lead">
+                    Edit item detail here after the verification process is completed.
+                </p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8 order-md-1">
+                    <h4 class="mb-3">General Information</h4>
+                    <form class="needs-validation" novalidate action="/admin/item" method="POST">
+
+                        <!-- Item Title and Classification -->
+                        <!-- Item Title -->
+                        <!-- Asks for a title for the item or a piece -->
+                        <div class="mb-3">
+
+                            <label for="itemTitle">Item Title</label>
+                            <input type="text" class="form-control" id="itemTitle" placeholder="Item Title" name="item[title]" value="<%= item.title %>" required>
+
+                            <div class="invalid-feedback">
+                                Please enter an item title
+                            </div>
+
+                        </div>
+
+
+                        <div class="row">
+
+                            <!-- Item Category -->
+                            <!-- Provides the category of the item -->
+                            <div class="col-md-6 mb-3">
+                                <label for="category">Category</label>
+                                <div>
+                                    <div class="custom-control custom-radio">
+                                      <input type="radio" id="drawingCategory" name="item[category]" value="Drawing" class="custom-control-input" onclick="handleClick(this);"
+                                      <% if(item.category == "Drawing"){ %>
+                                        checked
+                                      <% } %>
+                                      >
+                                      <label class="custom-control-label" for="drawingCategory">Drawing</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                      <input type="radio" id="paintingCategory" name="item[category]" value="Painting" class="custom-control-input" onclick="handleClick(this);"
+                                      <% if(item.category == "Painting"){ %>
+                                        checked
+                                      <% } %>
+                                      >
+                                      <label class="custom-control-label" for="paintingCategory">Painting</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                      <input type="radio" id="photoCategory" name="item[category]" value="Photo" class="custom-control-input" onclick="handleClick(this);"
+                                      <% if(item.category == "Photo"){ %>
+                                        checked
+                                      <% } %>
+                                      >
+                                      <label class="custom-control-label" for="photoCategory">Photographic Images</label>
+                                    </div>
+                                   <div class="custom-control custom-radio">
+                                      <input type="radio" id="sculpturesCategory" name="item[category]" value="Sculptures" class="custom-control-input" onclick="handleClick(this);"
+                                      <% if(item.category == "Sculptures"){ %>
+                                        checked
+                                      <% } %>
+                                      >
+                                      <label class="custom-control-label" for="sculpturesCategory">Sculptures</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                      <input type="radio" id="carvingsCategory" name="item[category]" value="Carvings" class="custom-control-input" onclick="handleClick(this);"
+                                      <% if(item.category == "Carvings"){ %>
+                                        checked
+                                      <% } %>
+                                      >
+                                      <label class="custom-control-label" for="carvingsCategory">Carvings</label>
+                                    </div>
+
+                                    
+                                </div>
+                                <div class="invalid-feedback">
+                                    Please select a valid category
+                                </div>
+                                
+
+                                
+
+                            </div>
+
+                            <!-- TODO: Create a way to create additional classification -->
+
+                            <!-- Item Classfication -->
+                            <!-- Asks for a general subject classification of the item -->
+                            <!-- eg. Landscape, Nude, Animal -->
+                            <div class="col-md-6 mb-3">
+
+                                <label for="classification">Classification</label>
+                                <select class="custom-select d-block w-100" id="classification" name="item[classification]" required>
+                                    <option value="">Choose...</option>
+                                    <option>Landscape</option>
+                                    <option>Seascape</option>
+                                    <option>Portrait</option>
+                                    <option>Figure</option>
+                                </select>
+
+                                <div class="invalid-feedback">
+                                    Please select a valid classification
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+
+                        <!-- Artist/ Creator's Name -->
+                        <!-- Provides the name of the creator of the item -->
+                        <div class="mb-3">
+                            <label for="artistName">Artist/Creator's Name</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="artistName" placeholder="Artist/Creator's Name" name="item[artistName]" required>
+                                <div class="invalid-feedback">
+                                    Artist/Creator's Name is required
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TODO: Make this accept only 4 characters for year, or make it a date input -->
+                        <!-- Year the item created in -->
+                        <!-- Provides the year in which the item was created -->
+                        <div class="mb-3">
+                            <label for="yearProduced">Year Produced</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="yearProduced" placeholder="Year Created" name="item[yearProduced]" required>
+                                <div class="invalid-feedback">
+                                    Item's year of creation is required
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- TODO: Make this textarea input accept WYSIWYG inputs. Should accept html/md input-->
+                        <!-- Item Description -->
+                        <!-- Provides detailed information about the item -->
+                        <div class="mb-3">
+                            <label for="itemDesc">Item Description</label>
+                            <div class="input-group">
+                                <textarea class="form-control" id="itemDesc" placeholder="Item Description" name="item[itemDesc]" required></textarea>
+
+                                <div class="invalid-feedback">
+                                    Please provide the detailed description for the item
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="mb-4">
+
+
+
+
+
+                        <!-- Category Specific Information -->
+                        <h4 class="mb-3">Category Information</h4>
+                        <small id="categoryNotSelectedMessage">Category not selected</small>
+                        <!-- TODO: Change drawing and painting medium to select input type  -->
+                        <!-- Drawing Medium -->
+                        <div class="mb-3" id="drawingMediumDiv">
+                            <label for="drawingMedium">Drawing Medium</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="drawingMedium" placeholder="Drawing Medium" name="item[drawingMedium]" required>
+                                <div class="invalid-feedback">
+                                    Item's method of drawing is required
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Painting Medium -->
+                        <div class="mb-3" id="paintingMediumDiv">
+                            <label for="paintingMedium">Painting Medium</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="paintingMedium" placeholder="Painting Medium" name="item[paintingMedium]" required>
+                                <div class="invalid-feedback">
+                                    Item's method of painting is required
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Image type -->
+                        <div class="mb-3" id="imageTypeDiv">
+                            <label for="imageType">Image Type</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="imageType" placeholder="Image Type" name="item[imageType]" required>
+                                <div class="invalid-feedback">
+                                    Item's image type is required
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Material Used -->
+                        <div class="mb-3" id="materialUsedDiv">
+                            <label for="materialUsed">Material Used</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="materialUsed" placeholder="Material Used" name="item[materialUsed]" required>
+                                <div class="invalid-feedback">
+                                    Item's materials used is required
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="row">
+                            <!-- Dimensions -->
+                            <div class="col-md-8 mb-3" id="dimensionDiv">
+                                <label for="dimension">Item Dimension</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="dimension" placeholder="Height x Length x Width (in cms)" name="item[dimension]" required>
+                                    <small class="text-muted">Enter the dimension with the format with 'x' in between. Do not specify the measurement unit. eg: cm</small>
+                                    <div class="invalid-feedback">
+                                        Item's dimensions are required
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Item Weight -->
+                            <div class="col-md-4 mb-3" id="weightDiv">
+                                <label for="weight">Item Weight</label>
+                                <input type="text" class="form-control" id="weight" placeholder="Weight (in kgs)" name="item[weight]" required>
+                                <small class="text-muted">Item weight in kilograms. Do not specify the measurement unit. eg: kgs/lbs</small>
+
+                                <div class="invalid-feedback">
+                                    Item's dimensions are required
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- is Framed -->
+                        <div class="mb-3" id="isFramedDiv">
+
+                            <div class="custom-control custom-checkbox">
+                                <div class="input-group">
+                                    <input type="checkbox" class="custom-control-input" id="isFramed" name="item[isFramed]" value="isFramed">
+                                    <label class="custom-control-label" for="isFramed">The item is framed</label>
+                                </div>
+                                <small class="text-muted">Select if the item is framed.</small>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+                        <!-- Auction Details -->
+                        <hr class="mb-4">
+                        <h4 class="mb-3">Auction Details</h4>
+                        <!-- TODO: See if this input should be decided after the pending list is verified -->
+                        <!-- Auction Date -->
+                        <div class="mb-3">
+                            <label for="auctionDate">Auction Date</label>
+                            <div class="input-group">
+                                <input type="date" class="form-control" id="auctionDate" placeholder="Auction date" name="item[auctionDate]" required>
+                                <div class="invalid-feedback">
+                                    The date of the auction is required
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Estimated Price of the item -->
+                        <div class="mb-3">
+
+                            <label for="estimatedPrice"><h5 class="mb-3">Estimated Price</h5></label>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="minEstimatedPrice">Minimum Price</label>
+                                    <input type="text" class="form-control" id="minEstimatedPrice" placeholder="Min Estimated Price" name="item[minEstimatedPrice]" required>
+                                    <small class="text-muted">Minimum estimated price of the item</small>
+                                    <div class="invalid-feedback">
+                                        Please input the minimum estimated price of the item
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="maxEstimatedPrice">Maximum Price</label>
+                                    <input type="text" class="form-control" id="maxEstimatedPrice" placeholder="Max Estimated Price" name="item[maxEstimatedPrice]" required>
+                                    <small class="text-muted">Maximum estimated price of the item</small>
+                                    <div class="invalid-feedback">
+                                        Please input the maximum estimated price of the item
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="mb-4">
+                        
+                        <button class="btn btn-primary btn-lg btn-block" type="submit">Create Item</button>
+                    </form>
+                </div>
+            </div>
+
+            
+        </div>
+        <br>
+    </div>
+
+</div>
+<!-- Category selection form input scripts -->
+<script src="/javascripts/item-category-selection.js"></script>
+
+<!-- TODO: Enable the form validation script after the tests are complete -->
+<!-- <script src="\javascripts\form-validation.js"></script> -->
+<% include ../partials/adminFooter %>
