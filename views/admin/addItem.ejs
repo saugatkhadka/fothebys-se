@@ -89,6 +89,12 @@
                                     <option>Seascape</option>
                                     <option>Portrait</option>
                                     <option>Figure</option>
+                                    <option>Still</option>
+                                    <option>Life</option>
+                                    <option>Nude</option>
+                                    <option>Animal</option>
+                                    <option>Abstract</option>
+                                    <option>Other</option>
                                 </select>
 
                                 <div class="invalid-feedback">
@@ -177,7 +183,12 @@
                         <div class="mb-3" id="imageTypeDiv">
                             <label for="imageType">Image Type</label>
                             <div class="input-group">
-                                <input type="text" class="form-control" id="imageType" placeholder="Image Type" name="item[imageType]" required>
+                                <select class="custom-select d-block w-100" id="imageType" name="item[imageType]" required>
+                                    <option value="">Choose...</option>
+                                    <option>Black and White</option>
+                                    <option>Color</option>
+                                    <option>Other</option>
+                                </select>
                                 <div class="invalid-feedback">
                                     Item's image type is required
                                 </div>
@@ -204,7 +215,7 @@
                                 <label for="dimension">Item Dimension</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="dimension" placeholder="Height x Length x Width (in cms)" name="item[dimension]" required>
-                                    <small class="text-muted">Enter the dimension with the format with 'x' in between. Do not specify the measurement unit. eg: cm</small>
+                                    <small class="text-muted">Enter the dimension with the format: Height x Length x Width. Do not specify the measurement unit. eg: cm</small>
                                     <div class="invalid-feedback">
                                         Item's dimensions are required
                                     </div>
@@ -296,5 +307,5 @@
 <script src="/javascripts/item-category-selection.js"></script>
 
 <!-- TODO: Enable the form validation script after the tests are complete -->
-<!-- <script src="\javascripts\form-validation.js"></script> -->
+<script src="\javascripts\form-validation.js"></script>
 <% include ../partials/adminFooter %>

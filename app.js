@@ -4,6 +4,7 @@ var createError = require('http-errors'),
     bodyParser  = require("body-parser"),
     // Allowing the env file to load and use env variables in .env file
     dotenv      = require('dotenv').config(),
+    methodOverride = require("method-override"),
     mongoose    = require('mongoose'),
     path        = require('path'),
     cookieParser = require('cookie-parser'),
@@ -45,7 +46,7 @@ app.use(bodyParser.json());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
-
+app.use(methodOverride("_method"));
 app.use(logger('dev'));
 // app.use(express.json());
 
@@ -127,14 +128,6 @@ app.get("/admin/item", function(req, res, next){
   );
 });
 
-// Item registration form
-app.get('/admin/item/new', function (req, res, next) {
-
-  res.render('admin/addItem', {
-    title: 'Add Item'
-  });
-});
-
 // New Item creation POST routes
 // Handles creating new item/piece
 app.post('/admin/item', function(req, res, next){
@@ -183,8 +176,8 @@ app.post('/admin/item', function(req, res, next){
         itemDesc: req.body.item.itemDesc, 
         auctionDate: req.body.item.auctionDate,  
         estimatedPrice: {
-          min: req.body.item.minEstimatedPrice,
-          max: req.body.item.maxEstimatedPrice
+          minEstimatedPrice: req.body.item.minEstimatedPrice,
+          maxEstimatedPrice: req.body.item.maxEstimatedPrice
         },
         categoryInfo: {
           drawingMedium: req.body.item.drawingMedium,
@@ -246,6 +239,31 @@ app.post('/admin/item', function(req, res, next){
   });
 
 });
+
+// Item registration form
+app.get('/admin/item/new', (req, res, next) => {
+
+  res.render('admin/addItem', {
+    title: 'Add Item'
+  });
+});
+
+// Delete/Destroy Item Route
+// TODO: Add middleware to check item ownership and who uploaded, so only who added the item can delete it or the admins. Clarify and confirm feature
+app.delete("/admin/item/:id", (req, res, next) => {
+  Item.findByIdAndDelete(req.params.id, (err) => {
+    if(err) {return next(err); }
+    else {
+      console.log("Item successfully deleted");
+      res.redirect("back");
+    }
+  })
+});
+
+
+
+
+
 
 app.get('/admin/item/:id/edit', (req,res, next) => {
   Item.findById({_id: req.params.id}, (err, foundItem) => {

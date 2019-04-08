@@ -91,8 +91,28 @@
         } // switch case ends
     }// handleClick Ends
 
+    function checkCategoryOnEdit() {
+
+        if(document.getElementById('drawingCategory').checked){
+            handleClick(document.getElementById('drawingCategory'));
+        } else if(document.getElementById('paintingCategory').checked){
+            handleClick(document.getElementById('paintingCategory'));
+        } else if(document.getElementById('photoCategory').checked){
+            handleClick(document.getElementById('photoCategory'));
+        } else if(document.getElementById('sculpturesCategory').checked){
+            handleClick(document.getElementById('sculpturesCategory'));
+        } else if(document.getElementById('carvingsCategory').checked){
+            handleClick(document.getElementById('carvingsCategory'));
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         // Display set to none, since no category selected
         resetCategoryInput();
+        
+        checkCategoryOnEdit();
+        
+
+
     });
     

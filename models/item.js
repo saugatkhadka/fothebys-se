@@ -10,8 +10,8 @@ const itemSchema = new mongoose.Schema({
 	itemDesc: String,	
 	auctionDate: String,	
 	estimatedPrice: {
-		min: String,
-		max: String
+		minEstimatedPrice: String,
+		maxEstimatedPrice: String
 	},
 	categoryInfo: {
 		drawingMedium: String,
@@ -19,11 +19,13 @@ const itemSchema = new mongoose.Schema({
 		imageType: String,
 		materialUsed: String,
 		isFramed: Boolean,
-		dimensions: {
-			height: Number,
-			length: Number,
-			width: Number
-		},
+		// TODO: Make the form accept diff values for height, length and width
+		// dimensions: {
+		// 	height: Number,
+		// 	length: Number,
+		// 	width: Number
+		// },
+		dimension: String,
 		weight: Number
 	}
 }, {timestamps: true});
