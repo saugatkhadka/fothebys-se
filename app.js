@@ -46,6 +46,7 @@ app.use(bodyParser.json());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+// For restful routing
 app.use(methodOverride("_method"));
 app.use(logger('dev'));
 // app.use(express.json());
@@ -78,6 +79,12 @@ app.get('/login', function(req, res, next){
 app.get('/dashboard', function(req, res, next){
   res.render('users/dashboard', {
     title: 'Dashboard'
+  });
+});
+
+app.get("/register", (req, res, next) => {
+  res.render("users/register", {
+    title: 'Register'
   });
 });
 
@@ -263,8 +270,6 @@ app.delete("/admin/item/:id", (req, res, next) => {
 
 
 
-
-
 app.get('/admin/item/:id/edit', (req,res, next) => {
   Item.findById({_id: req.params.id}, (err, foundItem) => {
     if(err) {
@@ -278,9 +283,7 @@ app.get('/admin/item/:id/edit', (req,res, next) => {
         item: foundItem
       });
     }
-    
   });
-
 });
 
 // DELETE ROUTE FOR ITEMS
@@ -289,6 +292,7 @@ app.get('/admin/item/:id/edit', (req,res, next) => {
 // });
 
 
+// Admin View Users
 
 
 
