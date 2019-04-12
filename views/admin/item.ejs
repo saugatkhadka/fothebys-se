@@ -1,77 +1,95 @@
-<% include ../partials/adminHeader %>
+<% include ../partials/newAdminHeader %>
 
-<div class="container main">
-    <!-- Item Details -->
-    <div class="container box">
 
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-            <h1 class="h2">Items</h1>
-            <div class="btn-toolbar mb-2 mb-md-0">
-                <div class="btn-group mr-2">
-                    <a href="/admin/item/new">
-                        <button type="button" class="btn btn-sm btn-outline-secondary">Add Item</button>
-                    </a>
-                    <button type="button" class="btn btn-sm btn-outline-secondary">Add xxx </button>
+<div class="container">
+
+  <div class="page-header">
+    <h1 class="page-title">Items</h1>
+  </div>
+
+  <div class="row row-cards row-deck">
+    <div class="col-12">
+      <div class="card">
+        <div class="card">
+            <div class="row custom-padding">
+                <div class="col-sm-12 col-lg-8">
+                    <h2>Items</h2>
                 </div>
-                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">
-                    <span data-feather="calendar"></span>
-                    This week
-                </button>
+                <div class="col-sm-12 col-lg-4">
+                    <div class="card custom-padding">
+                        <h2>Item Registration</h2>
+                        <a class="btn btn-block btn-danger btn-lg" href="/admin/item/new">Add Item</a>
+                        <small>Add new items</small>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <!-- Item Table -->
         <div class="table-responsive">
-	        <table class="table table-sm">
-			  <thead>
-			    <tr>
-			      <th scope="col">UID</th>
-			      <th scope="col">Item Title</th>
-			      <th scope="col">Category</th>
-			      <th scope="col">Classification</th>
-			      <th scope="col">Artist</th>
-			      <th scope="col">Year</th>
-			      <th scope="col">Description</th>
-			      <th scope="col">Auction Date</th>
-			      <th scope="col">Estimated Price</th>
-			    </tr>
-			  </thead>
-			  <tbody>
-			  	<!-- Data from the DB -->
-
-			  	<% items.forEach((item) => { %>
+          <table class="table card-table table-vcenter text-nowrap">
+            <thead>
+              <tr>
+				<th class="w-1">UID</th>
+				<th>Item Title</th>
+				<th>Category</th>
+				<th>Classification</th>
+				<th>Artist</th>
+				<th>Year</th>
+				<th>Auction Date</th>
+				<th>Estimated Price</th>
+				<th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+				<% items.forEach((item) => { %>
 				<tr>
-			      <th scope="row"><%= item.uid %></th>
-			      <td><%= item.title %></td>
-			      <td><%= item.category %></td>
-			      <td><%= item.classification %></td>
-			      <td><%= item.artistName %></td>
-			      <td><%= item.yearProduced %></td>
-			      <td><%= item.itemDesc %></td>
-			      <td><%= item.auctionDate %></td>
-			      <td><%= item.estimatedPrice.min %> to <%= item.estimatedPrice.max %></td>
-			      <td><%= item.createdAt %></td>
+					<td><span class="text-muted"><%= item.uid %></span></td>
+					<td><a href="invoice.html" class="text-inherit"><%= item.title %></a></td>
+					<td><%= item.category %></td>
+					<td><%= item.classification %></td>
+					<td><%= item.artistName %></td>
+					<td><%= item.yearProduced %></td>
+					<td><%= item.auctionDate %></td>
+					<td><%= item.estimatedPrice.minEstimatedPrice %> to <%= item.estimatedPrice.maxEstimatedPrice %></td>
+			      <!-- TODO: Show the full date fo the item creation in the item specific page -->
+			      <!-- <td><%= item.createdAt.toDateString() %></td> -->
+					<td class="text-right">
+					<a href="/admin/item/<%= item._id %>/edit" class="btn btn-secondary btn-sm">Edit</a>
 
-			      <th scope="row">
-					<a href="/admin/item/<%= item._id %>/edit">Edit</a>
-					<form class="delete-form" action="/admin/item/<%= item._id %>?_method=DELETE" method="POST">
-                        <button class="btn btn-danger btn-sm">Delete</button>
-                    </form>
-					<a href="#">Archive</a>
-			      </th>
-			      
+					<div class="item-action dropdown">
+						<button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">Actions</button>
+						<div class="dropdown-menu dropdown-menu-right">
+	                        <a href="/admin/item/<%= item._id %>/edit" class="dropdown-item"><i class="dropdown-icon fe fe-edit"></i> Edit </a>
+	                        <a href="javascript:void(0)" class="dropdown-item"><i class="dropdown-icon fe fe-message-square"></i> Something else here</a>
+	                        <div class="dropdown-divider"></div>
+	                        <a href="javascript:void(0)" class="dropdown-item"><i class="dropdown-icon fe fe-link"></i> Separated link</a>
+                      </div>
+					</div>
+					</td>
+					<td>
 
-			    </tr>
+<!-- 					<a class="icon" href="/admin/item/<%= item._id %>/edit">
+						<i class="fe fe-edit"></i>
+					</a> -->
 
-			  	<% }); %>
-			    
-			  </tbody>
-			</table>
+					<a class="icon" href="javascript:void(0)">
+						
+						<form class="icon" action="/admin/item/<%= item._id %>?_method=DELETE" id="table-form-delete" method="POST">
+							<input type="hidden" name="_csrf" value=<%=_csrf %> />
+	                        <button class="btn btn-danger btn-sm"><i class="fe fe-trash"></i></button>
+	                    </form>
+					</a>
+					</td>
+				</tr>
+
+				<% }); %>
+            </tbody>
+          </table>
         </div>
-
-
+      </div>
     </div>
+  </div>
 
 </div>
 
-<% include ../partials/adminFooter %>
+<% include ../partials/newAdminFooter %>

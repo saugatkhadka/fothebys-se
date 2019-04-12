@@ -1,0 +1,176 @@
+<% include ../partials/newAdminHeader %>
+
+<div class="container">
+	<div class="row">
+		<form class="card" action="/admin/user" method="POST">
+			<div class="card-header">
+				<h3 class="card-title">Add Users</h3>
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<!-- User Role Card -->
+					<div class="col-sm-12 col-lg-12">
+						<div class="form-group">
+							<label class="form-label">User Role</label>
+							<div class="selectgroup w-100">
+								<label class="selectgroup-item">
+									<input type="radio" name="user[role]" value="admin" class="selectgroup-input">
+									<span class="selectgroup-button">Admin</span>
+								</label>
+								<label class="selectgroup-item">
+									<input type="radio" name="user[role]" value="staff" class="selectgroup-input">
+									<span class="selectgroup-button">Staff</span>
+								</label>
+								<label class="selectgroup-item">
+									<input type="radio" name="user[role]" value="buyer" class="selectgroup-input"  checked="">
+									<span class="selectgroup-button">Buyer</span>
+								</label>
+								<label class="selectgroup-item">
+									<input type="radio" name="user[role]" value="seller" class="selectgroup-input">
+									<span class="selectgroup-button">Seller</span>
+								</label>
+								<label class="selectgroup-item">
+									<input type="radio" name="user[role]" value="joint" class="selectgroup-input">
+									<span class="selectgroup-button">Joint</span>
+								</label>
+							</div>
+						</div>
+					</div>
+					<!-- User General Information Card -->
+					<div class="col-sm-12 col-lg-4">
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title">General Information</h3>
+							</div>
+							<div class="card-body">
+								<form>
+									<div class="row">
+										<!-- Avatar Image -->
+										<div class="col-auto">
+											<span class="avatar avatar-xl"></span>
+										</div>
+										<!-- Title -->
+										<div class="col">
+											<div class="form-group">
+												<label class="form-label">Title</label>
+												<input class="form-control" placeholder="Mr/Mrs/Ms" name="user[title]">
+											</div>
+										</div>
+									</div>
+									
+									<!-- User F/L Name -->
+									<div class="row">
+										<!-- FirstName -->
+										<div class="col-lg-6 col-sm-12">
+											<div class="form-group">
+												<label class="form-label">First Name</label>
+												<input class="form-control" placeholder="FirstName" name="user[firstname]">
+											</div>
+										</div>
+										<!-- LastName -->
+										<div class="col-lg-6 col-sm-12">
+											<div class="form-group">
+												<label class="form-label">Last Name</label>
+												<input class="form-control" placeholder="FirstName" name="user[lastname]">
+											</div>
+										</div>
+										<div class="col-sm-12 col-lg-12">
+											<div class="form-group">
+												<label class="form-label">Email Address</label>
+												<input class="form-control" placeholder="your-email@domain.com" name="user[email]">
+											</div>
+										</div>
+										<div class="col-sm-12 col-lg-12">
+											<div class="form-group">
+												<label class="form-label">Password</label>
+												<input type="password" class="form-control" value="password"  name="user[password]">
+											</div>
+										</div>
+										<div class="col-sm-12 col-lg-12">
+											<div class="form-group">
+												<label class="form-label">Contact Number</label>
+												<input class="form-control" placeholder="0000-000-000" name="user[contact_number]">
+											</div>
+										</div>
+										<div class="col-sm-12 col-lg-12">
+											<div class="form-group">
+												<label class="form-label">Contact Address</label>
+												<input class="form-control" placeholder="Helsinki, Napoli" name="user[contact_address]">
+											</div>
+										</div>
+										
+
+										<div class="form-group">
+											<label class="form-label">Bio</label>
+											<textarea class="form-control" rows="5">Big belly rude boy, million dollar hustler. Unemployed.</textarea>
+										</div>
+
+										<div class="form-group">
+											<label class="form-label">Password</label>
+											<input type="password" class="form-control" value="password">
+										</div>
+
+										<div class="form-footer">
+											<button class="btn btn-primary btn-block">Save</button>
+										</div>
+									</div>
+									
+								</form>
+							</div>
+						</div>
+					</div>
+					<!-- Adminstrator Information Card -->
+					<div class="col-sm-12 col-lg-8">
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title">Adminstrator Information</h3>
+							</div>
+							<div class="card-body">	
+								<div class="row">
+									<div class="col-lg-12 col-sm-12">
+										<div class="form-group">
+											<label class="form-label">Job Post</label>
+											<input class="form-control" placeholder="Manager" name="user[job_post]">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					<!-- Buyer/Seller Information -->
+						
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title">Buyer/Seller Information</h3>
+							</div>
+							<div class="card-body">	
+								<div class="row">
+									<div class="col-lg-12 col-sm-12">
+										<div class="form-group">
+											<div class="form-label">Buyer Approved Status</div>
+											<label class="custom-switch">
+												<input type="checkbox" name="user[buyer_status]" class="custom-switch-input">
+												<span class="custom-switch-indicator"></span>
+												<span class="custom-switch-description">Buyer's Status has been approved through verfications</span>
+											</label>
+										</div>
+									</div>
+									<div class="col-lg-12 col-sm-12">
+										<div class="form-group">
+											<label class="form-label">Job Post</label>
+											<input class="form-control" placeholder="Manager" name="user[job_post]">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+
+			</div> <!-- Card Body Ends -->		
+		</form>
+	</div>
+</div>
+
+<% include ../partials/newAdminFooter %>
