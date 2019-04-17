@@ -3,6 +3,8 @@
 <div class="container">
 	<div class="row">
 		<form class="card" action="/admin/user" method="POST">
+			<input type="hidden" name="_csrf" value=<%=_csrf %> />
+			<!-- TODO: Add two hidden inputs: adminId and adminUserName from the current user/admin creating the user -->
 			<div class="card-header">
 				<h3 class="card-title">Add Users</h3>
 			</div>
@@ -64,20 +66,20 @@
 										<div class="col-lg-6 col-sm-12">
 											<div class="form-group">
 												<label class="form-label">First Name</label>
-												<input class="form-control" placeholder="FirstName" name="user[firstname]">
+												<input class="form-control" placeholder="FirstName" name="user[fname]">
 											</div>
 										</div>
 										<!-- LastName -->
 										<div class="col-lg-6 col-sm-12">
 											<div class="form-group">
 												<label class="form-label">Last Name</label>
-												<input class="form-control" placeholder="FirstName" name="user[lastname]">
+												<input class="form-control" placeholder="FirstName" name="user[lname]">
 											</div>
 										</div>
 										<div class="col-sm-12 col-lg-12">
 											<div class="form-group">
 												<label class="form-label">Email Address</label>
-												<input class="form-control" placeholder="your-email@domain.com" name="user[email]">
+												<input type="email" class="form-control" placeholder="your-email@domain.com" name="user[email]">
 											</div>
 										</div>
 										<div class="col-sm-12 col-lg-12">
@@ -89,29 +91,20 @@
 										<div class="col-sm-12 col-lg-12">
 											<div class="form-group">
 												<label class="form-label">Contact Number</label>
-												<input class="form-control" placeholder="0000-000-000" name="user[contact_number]">
+												<input class="form-control" placeholder="0000-000-000" name="user[phone_number]">
 											</div>
 										</div>
 										<div class="col-sm-12 col-lg-12">
 											<div class="form-group">
 												<label class="form-label">Contact Address</label>
-												<input class="form-control" placeholder="Helsinki, Napoli" name="user[contact_address]">
+												<input class="form-control" placeholder="Helsinki, Napoli" name="user[location]">
 											</div>
 										</div>
-										
-
-										<div class="form-group">
-											<label class="form-label">Bio</label>
-											<textarea class="form-control" rows="5">Big belly rude boy, million dollar hustler. Unemployed.</textarea>
-										</div>
-
-										<div class="form-group">
-											<label class="form-label">Password</label>
-											<input type="password" class="form-control" value="password">
-										</div>
-
-										<div class="form-footer">
-											<button class="btn btn-primary btn-block">Save</button>
+										<div class="col-sm-12 col-lg-12">
+											<div class="form-group">
+												<label class="form-label">Joined On</label>
+												<input type="date" class="form-control" placeholder="" name="user[joined_on]">
+											</div>
 										</div>
 									</div>
 									
@@ -119,8 +112,9 @@
 							</div>
 						</div>
 					</div>
-					<!-- Adminstrator Information Card -->
+					
 					<div class="col-sm-12 col-lg-8">
+						<!-- Adminstrator Information Card -->
 						<div class="card">
 							<div class="card-header">
 								<h3 class="card-title">Adminstrator Information</h3>
@@ -130,14 +124,14 @@
 									<div class="col-lg-12 col-sm-12">
 										<div class="form-group">
 											<label class="form-label">Job Post</label>
-											<input class="form-control" placeholder="Manager" name="user[job_post]">
+											<input class="form-control" placeholder="Manager" name="user[admin_post]">
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
-					<!-- Buyer/Seller Information -->
-						
+
+						<!-- Buyer/Seller Information -->
 						<div class="card">
 							<div class="card-header">
 								<h3 class="card-title">Buyer/Seller Information</h3>
@@ -148,26 +142,50 @@
 										<div class="form-group">
 											<div class="form-label">Buyer Approved Status</div>
 											<label class="custom-switch">
-												<input type="checkbox" name="user[buyer_status]" class="custom-switch-input">
+												<input type="checkbox" name="user[buyer_approved_status]" class="custom-switch-input">
 												<span class="custom-switch-indicator"></span>
 												<span class="custom-switch-description">Buyer's Status has been approved through verfications</span>
 											</label>
 										</div>
 									</div>
+									<div class="col-lg-6 col-sm-12">
+										<div class="form-group">
+											<label class="form-label">Bank Account No.</label>
+											<input class="form-control" placeholder="XXXX-XXXX-XXXX-XXXX" name="user[buyer_bank_account_no]">
+										</div>
+									</div>
+									<div class="col-lg-6 col-sm-12">
+										<div class="form-group">
+											<label class="form-label">Bank Sort Card</label>
+											<input class="form-control" placeholder="Bank Sort Card" name="user[buyer_bank_sort_card]">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					
+						<!-- Additional Information Card -->
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title">Additional Information</h3>
+							</div>
+							<div class="card-body">	
+								<div class="row">
 									<div class="col-lg-12 col-sm-12">
 										<div class="form-group">
-											<label class="form-label">Job Post</label>
-											<input class="form-control" placeholder="Manager" name="user[job_post]">
+
+											<label class="form-label">Note</label>
+											<textarea class="form-control" rows="5" name="user[note]">He likes to eat ice cream during interviews</textarea>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-
-
 				</div>
-
+				<div class="form-footer">
+					<button class="btn btn-primary btn-block">Save</button>
+				</div>
 			</div> <!-- Card Body Ends -->		
 		</form>
 	</div>

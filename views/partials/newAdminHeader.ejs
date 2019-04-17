@@ -39,6 +39,10 @@
   <!-- Input Mask Plugin -->
   <script src="/plugins/input-mask/plugin.js"></script>
 
+  <!-- Moment JS  -->
+  <!-- <script src="../../node_modules/moment/min/moment-with-locales.min.js"></script> -->
+
+
   <link rel="stylesheet" type="text/css" href="/css/custom-admin.css">
 </head>
 
@@ -98,9 +102,14 @@
                   <span class="avatar" style="background-image: url(/demo/faces/female/25.jpg)"></span>
                   <span class="ml-2 d-none d-lg-block">
                     <!-- User Name -->
-                    <span class="text-default">Jane Pearson</span>
+                    <span class="text-default"><%= user.profile.fname + " " + user.profile.lname %></span>
                     <!-- User Level/Status -->
-                    <small class="text-muted d-block mt-1">Administrator</small>
+                    <small class="text-muted d-block mt-1">
+                      <% if(user.role == "admin"){ %>
+                        Administrator
+                      <% } %>
+
+                    </small>
                   </span>
                 </a>
                 <!-- Menus -->
@@ -122,7 +131,7 @@
                   <a class="dropdown-item" href="#">
                     <i class="dropdown-icon fe fe-help-circle"></i> Need help?
                   </a>
-                  <a class="dropdown-item" href="#">
+                  <a class="dropdown-item" href="/logout">
                     <i class="dropdown-icon fe fe-log-out"></i> Sign out
                   </a>
                 </div>

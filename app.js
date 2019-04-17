@@ -5,21 +5,26 @@ const bodyParser      = require("body-parser");
 const lusca           = require('lusca');
 const dotenv          = require('dotenv').config();  // Allowing the env file to load and use env variables in .env file
 const MongoStore      = require('connect-mongo')(session);
+const flash           = require('express-flash');
 const chalk           = require('chalk');
 const methodOverride  = require("method-override");
+const expressSanitizer = require("express-sanitizer");
+const expressValidator = require('express-validator');
 const mongoose        = require('mongoose');
 const passport        = require('passport');
 const path            = require('path');
 const cookieParser    = require('cookie-parser');
 const logger          = require('morgan');
+const moment          = require('moment');
 
 
 // For temporary use only
 // Needs refactor
 // TODO: Refactor the routers and the controllers
 // DB Models
-var Item = require("./models/item");
-var Counter = require('./models/counter');
+var Item = require("./models/Item");
+var User = require("./models/User");
+var Counter = require('./models/Counter');
 
 /**
  * Controllers (route handlers).
@@ -56,14 +61,10 @@ mongoose.connection.on('error', (err) => {
 /**
  * Express configuration.
  */
-// Tells express to use body parser
-app.use(bodyParser.urlencoded({extended:true}));
-app.use(bodyParser.json());
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+
 // For restful routing
 app.use(methodOverride("_method"));
+app.use(expressSanitizer());
 app.use(logger('dev'));
 // app.use(express.json());
 
@@ -72,16 +73,13 @@ app.use(logger('dev'));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 
-/**
- * Express configuration.
- */
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 // app.use(compression());
-app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(expressValidator());
+app.use(expressValidator());
 app.use(session({
   resave: true,
   saveUninitialized: true,
@@ -95,7 +93,7 @@ app.use(session({
 // Passport
 app.use(passport.initialize());
 app.use(passport.session());
-// app.use(flash());
+app.use(flash());
 app.use((req, res, next) => {
   if (req.path === '/api/upload') {
     next();
@@ -136,9 +134,48 @@ app.get('/', indexRouter);
 
 //Login-----
 app.get('/login', function(req, res, next){
-    res.render('main/login', {
-        title: "Login"
+  if (req.user) {
+    return res.redirect('/');
+  }
+  res.render('main/login', {
+    title: "Login"
+  }); 
+});
+
+app.post('/login', (req, res, next) => {
+  req.assert('email', 'Email is not valid').isEmail();
+  req.assert('password', 'Password cannot be blank').notEmpty();
+  req.sanitize('email');
+
+  const errors = req.validationErrors();
+
+  if (errors) {
+    req.flash('errors', errors);
+    return res.redirect('/login');
+  }
+
+  passport.authenticate('local', (err, user, info) => {
+    if (err) { return next(err); }
+    if (!user) {
+      req.flash('errors', info);
+      return res.redirect('/login');
+    }
+    req.logIn(user, (err) => {
+      if (err) { return next(err); }
+      req.flash('success', { msg: 'Success! You are logged in.' });
+      console.log(req.session.returnTo);
+      res.redirect(req.session.returnTo || '/admin');
     });
+  })(req, res, next);
+});
+
+app.get('/logout', (req, res) => {
+  req.logout();
+  req.session.destroy((err) => {
+    if (err) console.log('Error : Failed to destroy the session during logout.', err);
+    req.user = null;
+    res.redirect('/');
+  });
 });
 
 // Users
@@ -166,16 +203,93 @@ app.get('/admin', function(req, res, next){
 
 // View Users
 app.get('/admin/user', function (req, res, next) {
-  res.render('admin/user', {
-    title: "Users",
-    selectedTab: 'user'
+  User.find({}, (err, foundUsers) => {
+    if(err) {return next(err);}
+    if(foundUsers){
+      res.render('admin/user', {
+        title: "Users",
+        selectedTab: 'user',
+        users: foundUsers
+      });
+    }
   });
+});
+
+// User POST Route
+app.post('/admin/user', (req, res, next) => {
+
+  // // Creating User
+
+  const user = new User({
+      email: req.body.user.email,
+      password: req.body.user.password,
+      role: req.body.user.role,
+      verification_status: req.body.user.approved_status,
+      profile: {
+        title: req.body.user.title,
+        fname: req.body.user.fname,
+        lname: req.body.user.lname,
+        location: req.body.user.location,
+        phone_number: req.body.user.phone_number,
+        picture: req.body.user.picture
+      },
+      
+
+      joined_on: req.body.user.joined_on,
+
+      added_by: {
+        id: req.body.user.adminId,
+        username: req.body.user.adminUserName,
+      },
+
+      note: req.body.user.note,
+
+      admin: {
+        post: req.body.user.admin_post,
+      },
+
+      buyer: {
+        approved_status: req.body.user.buyer_approved_status,
+        bank_account_no: req.body.user.buyer_bank_account_no,
+        bank_sort_card: req.body.user.buyer_bank_sort_card
+      }
+  });
+
+  console.log("From User Post");
+  console.log(req.body.user);
+
+
+  // Saving the User
+  User.findOne({
+    email: req.body.user.email
+    },(err, foundUser) => {
+        if(err) {return next(err)};
+        // TODO: Handle error if the user is already created
+        user.save((err) => {
+            if(err) {return next(err)};
+
+            console.log("User Successfully Added");
+            // Runs onlt if the user is found the db
+            // console.log(foundUser);
+            // Redirects back after success
+            res.redirect("/admin/user");
+        });
+    }
+  );
+
+  // res.send("USER POST ROUTE");
+
 });
 
 app.get('/admin/user/new', function (req, res, next) {
   res.render('admin/addUser', {
     title: "Add Users",
-    selectedTab: 'user' 
+    selectedTab: 'user',
+     // for user testing purposes
+    // user: {
+    //   _id: 12345670,
+    //   username: "tester123"
+    // }
   });
 });
 
@@ -340,8 +454,6 @@ app.delete("/admin/item/:id", (req, res, next) => {
         }
     })
 });
-
-
 
 
 app.get('/admin/item/:id/edit', (req,res, next) => {

@@ -24,6 +24,7 @@
   
   <!-- Custom styles for this template -->
   <link rel='stylesheet' href='/stylesheets/style.css' />
+  <link rel='stylesheet' href='/css/style.css' />
 
 </head>
 
@@ -48,10 +49,19 @@
             </svg>
             
           </a>
-          <a class="btn btn-sm" href="/register">Request Account</a>
-          <a class="btn btn-sm btn-outline-primary" href="/login">Login</a>
+          <% if(!user){ %>
+            <a class="btn btn-sm" href="/register">Request Account</a>
+            <a class="btn btn-sm btn-outline-primary" href="/login">Login</a>
+          <% } else { %>
+            <a class="btn btn-sm btn-outline-primary" href="/admin">Dashboard</a>
+            <a class="btn btn-sm " href="/logout">Logout</a>
+          <% } %>
+          
         </div>
       </div>
     </div>
 
   </header>
+  <div class="container message">
+    <% include ../partials/flash %>
+  </div>  

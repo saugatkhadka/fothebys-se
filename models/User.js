@@ -8,15 +8,62 @@ const userSchema = new mongoose.Schema({
   passwordResetToken: String,
   passwordResetExpires: Date,
 
-  google: String,
   tokens: Array,
 
+  role: String,
+  verification_status: {type: Boolean, default: 0},
   profile: {
-    name: String,
-    gender: String,
+    title: String,
+    fname: String,
+    lname: String,
     location: String,
-    website: String,
+    phone_number: String,
     picture: String
+  },
+
+  joined_on: {type: Date, default: Date.now},
+  added_by: {
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    },
+    // username is a combination of fname and lname of an admin
+    username: String
+  },
+  note: String,
+  admin: {
+    post: String
+  },
+  buyer: {
+    approved_status: String,
+    bank_account_no: String,
+    bank_sort_card: String,
+    item_bought: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Item"
+      }
+    ],
+    commission_bid: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Item"
+      }
+    ],
+  },
+  seller: {
+    item_sold: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Item"
+      }
+    ],
+    pending_sales: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Item"
+      }
+    ],
   }
 }, { timestamps: true });
 
