@@ -107,6 +107,14 @@
                     <small class="text-muted d-block mt-1">
                       <% if(user.role == "admin"){ %>
                         Administrator
+                      <% } else if(user.role == "staff"){ %>
+                        Staff
+                      <% } else if(user.role == "buyer"){ %>
+                        Buyer
+                      <% } else if(user.role == "seller"){ %>
+                        Seller
+                      <% } else if(user.role == "joint"){ %>
+                        Buyer/Seller
                       <% } %>
 
                     </small>
@@ -114,7 +122,7 @@
                 </a>
                 <!-- Menus -->
                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                  <a class="dropdown-item" href="#">
+                  <a class="dropdown-item" href="/admin/user/<%= user._id %>">
                     <i class="dropdown-icon fe fe-user"></i> Profile
                   </a>
                   <a class="dropdown-item" href="#">
@@ -230,4 +238,7 @@
         </div>
       </div>
       <div class="my-3 my-md-5">
+         <div class="container message">
+          <% include ../partials/flash %>
+        </div>  
       </div>

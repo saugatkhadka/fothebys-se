@@ -29,9 +29,17 @@ var Counter = require('./models/Counter');
 /**
  * Controllers (route handlers).
  */
-var indexRouter = require('./controllers/index');
-var usersRouter = require('./controllers/users');
+var indexController = require('./controllers/index');
+var adminController = require('./controllers/admin');
+var usersController = require('./controllers/user');
+var itemController = require('./controllers/item');
 
+
+/* 
+*  Middleware
+*  middleware must be kept inside the routes or controller when they are created
+*/
+// var middleware = require("./middleware");  // index.js is automatically run or called
 
 /**
  * API keys and Passport configuration.
@@ -73,7 +81,7 @@ app.use(logger('dev'));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 
-
+// Sets view path
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 // app.use(compression());
@@ -90,7 +98,11 @@ app.use(session({
     autoReconnect: true,
   })
 }));
-// Passport
+
+
+/*
+** Passport
+*/
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -104,10 +116,14 @@ app.use((req, res, next) => {
 app.use(lusca.xframe('SAMEORIGIN'));
 app.use(lusca.xssProtection(true));
 app.disable('x-powered-by');
+// Making user information available where needed on all routes
 app.use((req, res, next) => {
   res.locals.user = req.user;
+  res.locals.error = req.flash("error");
+  res.locals.success = req.flash("success");
   next();
 });
+
 app.use((req, res, next) => {
   // After successful login, redirect back to the intended page
   if (!req.user
@@ -125,363 +141,42 @@ app.use((req, res, next) => {
 
 
 
-
-
-
-// ROUTES
+/*
+** ROUTES
+*/
 // Main Route
-app.get('/', indexRouter);
+app.get('/', indexController.index);
+app.get('/login', indexController.getLogin);
+app.post('/login', indexController.postLogin);
+app.get('/logout', passportConfig.isAuthenticated, indexController.getLogout);
 
-//Login-----
-app.get('/login', function(req, res, next){
-  if (req.user) {
-    return res.redirect('/');
-  }
-  res.render('main/login', {
-    title: "Login"
-  }); 
-});
-
-app.post('/login', (req, res, next) => {
-  req.assert('email', 'Email is not valid').isEmail();
-  req.assert('password', 'Password cannot be blank').notEmpty();
-  req.sanitize('email');
-
-  const errors = req.validationErrors();
-
-  if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/login');
-  }
-
-  passport.authenticate('local', (err, user, info) => {
-    if (err) { return next(err); }
-    if (!user) {
-      req.flash('errors', info);
-      return res.redirect('/login');
-    }
-    req.logIn(user, (err) => {
-      if (err) { return next(err); }
-      req.flash('success', { msg: 'Success! You are logged in.' });
-      console.log(req.session.returnTo);
-      res.redirect(req.session.returnTo || '/admin');
-    });
-  })(req, res, next);
-});
-
-app.get('/logout', (req, res) => {
-  req.logout();
-  req.session.destroy((err) => {
-    if (err) console.log('Error : Failed to destroy the session during logout.', err);
-    req.user = null;
-    res.redirect('/');
-  });
-});
-
-// Users
-// User Dashboard
-app.get('/dashboard', function(req, res, next){
-    res.render('users/dashboard', {
-        title: 'Dashboard'
-    });
-});
-
-app.get("/register", (req, res, next) => {
-    res.render("users/register", {
-        title: 'Register'
-    });
-});
-
-// Admin
-// Admin Dashboard
-app.get('/admin', function(req, res, next){
-    res.render('admin/admin', {
-        title: 'Admin Dashboard',
-        selectedTab: 'home'
-    });
-});
-
-// View Users
-app.get('/admin/user', function (req, res, next) {
-  User.find({}, (err, foundUsers) => {
-    if(err) {return next(err);}
-    if(foundUsers){
-      res.render('admin/user', {
-        title: "Users",
-        selectedTab: 'user',
-        users: foundUsers
-      });
-    }
-  });
-});
-
-// User POST Route
-app.post('/admin/user', (req, res, next) => {
-
-  // // Creating User
-
-  const user = new User({
-      email: req.body.user.email,
-      password: req.body.user.password,
-      role: req.body.user.role,
-      verification_status: req.body.user.approved_status,
-      profile: {
-        title: req.body.user.title,
-        fname: req.body.user.fname,
-        lname: req.body.user.lname,
-        location: req.body.user.location,
-        phone_number: req.body.user.phone_number,
-        picture: req.body.user.picture
-      },
-      
-
-      joined_on: req.body.user.joined_on,
-
-      added_by: {
-        id: req.body.user.adminId,
-        username: req.body.user.adminUserName,
-      },
-
-      note: req.body.user.note,
-
-      admin: {
-        post: req.body.user.admin_post,
-      },
-
-      buyer: {
-        approved_status: req.body.user.buyer_approved_status,
-        bank_account_no: req.body.user.buyer_bank_account_no,
-        bank_sort_card: req.body.user.buyer_bank_sort_card
-      }
-  });
-
-  console.log("From User Post");
-  console.log(req.body.user);
-
-
-  // Saving the User
-  User.findOne({
-    email: req.body.user.email
-    },(err, foundUser) => {
-        if(err) {return next(err)};
-        // TODO: Handle error if the user is already created
-        user.save((err) => {
-            if(err) {return next(err)};
-
-            console.log("User Successfully Added");
-            // Runs onlt if the user is found the db
-            // console.log(foundUser);
-            // Redirects back after success
-            res.redirect("/admin/user");
-        });
-    }
-  );
-
-  // res.send("USER POST ROUTE");
-
-});
-
-app.get('/admin/user/new', function (req, res, next) {
-  res.render('admin/addUser', {
-    title: "Add Users",
-    selectedTab: 'user',
-     // for user testing purposes
-    // user: {
-    //   _id: 12345670,
-    //   username: "tester123"
-    // }
-  });
-});
-
-
-// Auction View
-app.get('/admin/auction', function(req, res, next){
-    res.render('admin/auction', {
-        title: 'Auction'
-    });
-});
-
+// Admin Routes
+// TODO: Add middleware in passport config to check if the given user is admin or not
+// Some routes cannot be access by buyers and seller
+app.get('/admin', passportConfig.isAuthenticated, adminController.getDashboard);
+app.get('/admin/user', passportConfig.isAuthenticated, adminController.getUserList);
+app.post('/admin/user', passportConfig.isAuthenticated, adminController.postUser);
+app.get('/admin/user/new', passportConfig.isAuthenticated, adminController.getUserForm); 
 
 // Items Pages
 // No current page view
-// TODO: Add new page
-app.get("/admin/item", function(req, res, next){
-
-    Item.find({},(err, founditems) => {
-            if(err) {return next(err)};
-            // TODO: Implement a way to display errors for already exisiting item
-            if(founditems) {
-                // console.log(founditems);
-                res.render('admin/item', {
-                    title: 'Items',
-                    items: founditems,
-                    selectedTab: 'item'
-                });
-            };
-        }
-    );
-});
-
-// New Item creation POST routes
-// Handles creating new item/piece
-app.post('/admin/item', function(req, res, next){
-
-    // Creates/Initializes the counter for the first time
-    // Counter.create({lastCounter: 0}, (err, counter) => {
-    //   if(err) {
-    //     console.log("ERROR WITH THE COUNTER");
-    //     res.redirect("back");
-    //   } else {
-    //     counter.save();
-    //     console.log("COUNTER SAVED");
-    //     res.redirect("back");
-    //   }
-    // });
-
-
-    // TODO: Fix the way that counter updates
-    // Right now, the counter updates regardless of whether or not something saves to the Item collection
-    // Change it so that counter is only updated when the item is successfully saved
-
-
-    // Updates the counter each time
-    Counter.findOne({}, (err, counter) => {
-        Counter.findOneAndUpdate(counter._id, {lastCounter: Number(counter.lastCounter) + 1}, (err, updatedCounter) => {
-            // console.log("Counter: " + updatedCounter.lastCounter);
-            var uidCounter = updatedCounter.lastCounter.toString().padStart(8, "0");
-
-            // Creating new Item
-            const item = new Item({
-                // padStart() pads the current string with another specified string with (for now) 0.
-                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart
-                // This adds '0' before the unique 8 digit number to meet the criteria
-                // Since storing the unique number with leading zeros in mongodb removes the leading zeros
-                // the number is stored as string and increased using a counter with a function
-                // estimatedPrice: req.body.item.estimatedPrice.padStart(8, "0")
-                // uid: TODO: call counter from the funtion and add here, along with .padStart(8, "0")
-
-                uid: uidCounter,
-
-                title: req.body.item.title,
-                category: req.body.item.category,
-                classification: req.body.item.classification,
-                artistName: req.body.item.artistName,
-                yearProduced: req.body.item.yearProduced,
-                itemDesc: req.body.item.itemDesc,
-                auctionDate: req.body.item.auctionDate,
-                estimatedPrice: {
-                    minEstimatedPrice: req.body.item.minEstimatedPrice,
-                    maxEstimatedPrice: req.body.item.maxEstimatedPrice
-                },
-                categoryInfo: {
-                    drawingMedium: req.body.item.drawingMedium,
-                    paintingMedium: req.body.item.paintingMedium,
-                    imageType: req.body.item.imageType,
-                    materialUsed: req.body.item.materialUsed,
-                    dimension: req.body.item.dimension,
-                    weight: req.body.item.weight,
-                    isFramed: req.body.item.isFramed
-                }
-
-
-                // Test Data
-                // title: "test3",
-                // category: "Painting",
-                // classification: "Nude",
-                // artistName: "Harambe",
-                // yearProduced: 1998,
-                // itemDesc: "Nothing you need to know",
-                // auctionDate: "2019-04-04",
-                // estimatedPrice: {
-                //   min: 12000,
-                //   max: 13000
-                // },
-                // categoryInfo: {
-                //   drawingMedium: "Pencil"
-                // }
-
-            });
-
-            console.log(req.body.item);
-
-            // TODO: Create a new serial number for the item/piece to be inserted into the DB
-            // TODO: This should search for the serial number and see if they match, and throw error then
-
-            Item.findOne({
-                    title: req.body.item.title
-                },(err, founditem) => {
-                    if(err) {return next(err)};
-                    // TODO: Implement a way to display errors for already exisiting item
-                    // TODO: Current implementation requires using uid to verify that saved item is unique
-
-                    // Since no implementation is done, this statement is commented out
-                    // if(founditem) {
-                    //   console.log("This item already exists");
-                    //   return res.redirect("back")
-                    // };
-                    item.save((err) => {
-                        if(err) {return next(err)};
-                        // TODO: Use flash message to show the successful operation
-                        console.log("Item Successfully Added");
-                        console.log(item);
-                        // Redirects back after success
-                        res.redirect("/admin/item");
-                    });
-                }
-            );
-        });
-    });
-
-});
-
-// Item registration form
-app.get('/admin/item/new', (req, res, next) => {
-
-    res.render('admin/addItem', {
-        title: 'Add Item',
-        selectedTab: 'item'
-    });
-});
+// TODO: Add new individual item page
+app.get("/admin/item", passportConfig.isAuthenticated, itemController.getItemList);
+app.post('/admin/item', passportConfig.isAuthenticated, itemController.postItem);
+app.get('/admin/item/new', passportConfig.isAuthenticated, itemController.getItemCreate);
 
 // Delete/Destroy Item Route
 // TODO: Add middleware to check item ownership and who uploaded, so only who added the item can delete it or the admins. Clarify and confirm feature
-app.delete("/admin/item/:id", (req, res, next) => {
-    Item.findByIdAndDelete(req.params.id, (err) => {
-        if(err) {return next(err); }
-        else {
-            console.log("Item successfully deleted");
-            res.redirect("back");
-        }
-    })
-});
+app.delete("/admin/item/:id", passportConfig.isAuthenticated, itemController.deleteItem);
+app.get('/admin/item/:id/edit', passportConfig.isAuthenticated, itemController.getItemEdit);
 
 
-app.get('/admin/item/:id/edit', (req,res, next) => {
-    Item.findById({_id: req.params.id}, (err, foundItem) => {
-        if(err) {
-            return next(err);
-            //TODO: Add a error message on return
-            // console.log("Item not found");
-            // res.redirect("back");
-        } else {
-            res.render('admin/editItem', {
-                title: "Edit Item",
-                item: foundItem,
-                selectedTab: 'item'
-            });
-        }
-    });
-});
-
-// DELETE ROUTE FOR ITEMS
-// app.delete('/admin/item/:id', function(req, res) {
-
+// Auction View
+// app.get('/admin/auction', function(req, res, next){
+//     res.render('admin/auction', {
+//         title: 'Auction'
+//     });
 // });
-
-
-// Admin View Users
-
-
 
 
 
@@ -492,8 +187,6 @@ app.get('/test', function (req, res) {
         title: "Test"
     });
 });
-
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
