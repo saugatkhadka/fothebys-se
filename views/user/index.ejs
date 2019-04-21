@@ -27,11 +27,12 @@
                                 <th>User</th>
                                 <th class="text-center">Role</th>
                                 <th>Activity</th>
-                                <th class="text-center"><i class="icon-settings"></i></th>
+                                <th></th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <% users.forEach((user) => { %>
+                            <% users.forEach((foundUser) => { %>
                                 
 
                             <tr>
@@ -41,39 +42,42 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div><a href="/admin/user/<%= user._id %>"><%= user.profile.fname + " " + user.profile.lname %></a></div>
+                                    <div><a href="/admin/user/<%= user._id %>"><%= foundUser.profile.fname + " " + user.profile.lname %></a></div>
                                     <div class="small text-muted">
                                         <!-- TODO: Format Date -->
-                                        Registered: <%= new Date(user.joined_on).toDateString(); %>
+                                        Registered: <%= new Date(foundUser.joined_on).toDateString(); %>
                                     </div>
                                 </td>
                                 <td class="text-center">
-                                    <div><%= user.role %></div>
+                                    <div><%= foundUser.role %></div>
                                 </td>
                                 <td>
                                     <div class="small text-muted">Last login</div>
                                     <div>4 minutes ago</div>
                                 </td>
-                                <td class="text-center">
-                                    <div class="item-action dropdown">
-                                        <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i
-                                                class="fe fe-more-vertical"></i></a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a href="javascript:void(0)" class="dropdown-item"><i
-                                                    class="dropdown-icon fe fe-tag"></i> Action </a>
-                                            <a href="javascript:void(0)" class="dropdown-item"><i
-                                                    class="dropdown-icon fe fe-edit-2"></i> Another
-                                                action </a>
-                                            <a href="javascript:void(0)" class="dropdown-item"><i
-                                                    class="dropdown-icon fe fe-message-square"></i>
-                                                Something else here</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a href="javascript:void(0)" class="dropdown-item"><i
-                                                    class="dropdown-icon fe fe-link"></i> Separated
-                                                link</a>
-                                        </div>
+                                <td class="text-right">
+                                  <a href="/admin/user/<%= foundUser._id %>/edit" class="btn btn-secondary btn-sm">Edit</a>
+
+                                  <div class="item-action dropdown">
+                                      <button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">Actions</button>
+                                      <div class="dropdown-menu dropdown-menu-right">
+                                          <a href="/admin/user/<%= foundUser._id %>/edit" class="dropdown-item"><i class="dropdown-icon fe fe-edit"></i> Edit </a>
+                                          <a href="javascript:void(0)" class="dropdown-item"><i class="dropdown-icon fe fe-message-square"></i> Something else here</a>
+                                          <div class="dropdown-divider"></div>
+                                          <a href="javascript:void(0)" class="dropdown-item"><i class="dropdown-icon fe fe-link"></i> Separated link</a>
                                     </div>
-                                </td>
+                                  </div>
+                                  </td>
+                                  <td>
+                                    <a class="icon" href="javascript:void(0)">
+                                      
+                                      <form class="icon" action="/admin/user/<%= foundUser._id %>?_method=DELETE" id="table-form-delete" method="POST">
+                                        <input type="hidden" name="_csrf" value=<%=_csrf %> />
+                                        <input type="hidden" name="current_user_id" value="<%= user._id %>">
+                                        <button class="btn btn-danger btn-sm"><i class="fe fe-trash"></i></button>
+                                      </form>
+                                    </a>
+                                  </td>
                             </tr>
 
                             <% }); %>

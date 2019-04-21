@@ -1,0 +1,64 @@
+<% include ../partials/header %>
+
+<div class="container">
+	<h2>Request an Account</h2>
+	<p>Follow the steps below to request an account to be able to get an estimate for your item, an art or an object. </p>
+
+
+
+<hr>
+	<div class="container">
+	    <form class="" action="/request-account" method="POST">
+	        <input type="hidden" name="_csrf" value=<%=_csrf %> />
+	        <div class="row">
+	        	<div class="col-lg-2 mb-3">
+	        		<label for="title" class="h6">Title (required)</label>
+	        		<div class="form-label-group">
+			            <input type="text" id="fname" name="user[title]" class="form-control" placeholder="Title" required autofocus>
+			        </div>
+			        <small>Mr/Mrs/Ms.</small>
+	        	</div>
+	        	<div class="col-lg-4 mb-3">
+	        		<label for="fname" class="h6">First Name  (required)</label>
+	        		<div class="form-label-group">
+			            <input type="text" id="fname" name="user[fname]" class="form-control" placeholder="First Name" required >
+			        </div>
+	        	</div>
+	        	<div class="col-lg-6 mb-3">
+		            <label for="lname" class="h6">Last Name (required)</label>
+	        		<div class="form-label-group">
+			            <input type="text" id="lname" name="user[lname]" class="form-control" placeholder="Last Name" required >
+			        </div>
+	        	</div>
+	        	<div class="col-lg-8 mb-3">
+	        		<label for="inputEmail" class="h6">Email (required)</label>
+	        		<div class="form-label-group">
+			            <input type="email" id="inputEmail" name="user[email]" class="form-control" placeholder="Email address" required >
+			        </div>
+	        	</div>
+	        	<div class="col-lg-4 mb-3">
+	        		<label for="inputPhone" class="h6">Phone Number (required)</label>
+	        		<div class="form-label-group">
+			            <input type="phone" id="inputPhone" name="user[phone]" class="form-control" placeholder="XXXX-XXXX-XX" required >
+			        </div>
+	        	</div>
+	        	<div class="col-lg-12 mb-3">
+	        		<label for="inputIntent" class="h6">Intent for joining? (required)</label>
+	        		<div class="form-label-group">
+			            <textarea name="user[intent]" rows="5" class="form-control" required></textarea> 
+			        </div>
+	        	</div>
+		        <div class="col-lg-12 mb-3">
+		        	<div class="custom-control custom-checkbox">
+			            <input type="checkbox" class="custom-control-input" id="validity-check" required>
+	              		<label class="custom-control-label" for="validity-check">I confirm all information I submit here is correct and valid</label>
+		        	</div>
+	            </div>
+	        </div>
+
+	        <button class="btn btn-lg btn-primary btn-block" type="submit">Request an Account</button>
+	    </form>
+	</div>
+</div>
+
+<% include ../partials/footer %>

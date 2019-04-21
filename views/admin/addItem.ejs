@@ -3,7 +3,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-12">
-            <form class="card" class="needs-validation" novalidate action="/admin/item" method="POST">
+            <form class="card needs-validation" novalidate action="/admin/item" method="POST">
                 <div class="card-body">
                     <h3 class="card-title">Item Registration Form</h3>
                     <div class="row">
@@ -29,42 +29,43 @@
                                 <!-- Item Category -->
                                 <!-- Provides the category of the item -->
                                 <div class="col-md-8 mb-3 form-group">
-                                    <label for="category">Category</label>
+                                    <label for="category">Category </label> <small><em>Please select a category of the item to enter additonal details</em></small>
                                     <div class="selectgroup w-100">
                                         <label class="selectgroup-item" for="drawingCategory">
                                             <input type="radio" id="drawingCategory" name="item[category]"
-                                                value="Drawing" class="selectgroup-input" onclick="handleClick(this);">
+                                                value="Drawing" class="selectgroup-input" onclick="handleClick(this);" required>
                                             <span class="selectgroup-button">Drawing</span>
                                         </label>
 
                                         <label class="selectgroup-item" for="paintingCategory">
                                             <input type="radio" id="paintingCategory" name="item[category]"
-                                                value="Painting" class="selectgroup-input" onclick="handleClick(this);">
+                                                value="Painting" class="selectgroup-input" onclick="handleClick(this);" required>
                                             <span class="selectgroup-button">Painting</span>
                                         </label>
 
                                         <label class="selectgroup-item" for="photoCategory">
                                             <input type="radio" id="photoCategory" name="item[category]" value="Photo"
-                                                class="selectgroup-input" onclick="handleClick(this);">
+                                                class="selectgroup-input" onclick="handleClick(this);" required>
                                             <span class="selectgroup-button">Photographic Images</span>
                                         </label>
 
                                         <label class="selectgroup-item" for="sculpturesCategory">
                                             <input type="radio" id="sculpturesCategory" name="item[category]"
                                                 value="Sculptures" class="selectgroup-input"
-                                                onclick="handleClick(this);">
+                                                onclick="handleClick(this);" required>
                                             <span class="selectgroup-button">Sculptures</span>
                                         </label>
 
                                         <label class="selectgroup-item" for="carvingsCategory">
                                             <input type="radio" id="carvingsCategory" name="item[category]"
-                                                value="Carvings" class="selectgroup-input" onclick="handleClick(this);">
+                                                value="Carvings" class="selectgroup-input" onclick="handleClick(this);" required>
                                             <span class="selectgroup-button">Carvings</span>
                                         </label>
 
 
 
                                     </div>
+
                                     <div class="invalid-feedback">
                                         Please select a valid category
                                     </div>
@@ -214,14 +215,16 @@
                                         <input type="text" class="form-control" id="dimension"
                                             placeholder="Height x Length x Width (in cms)" name="item[dimension]"
                                             required>
-                                        <small class="text-muted">Enter the dimension with the format: Height x
-                                            Length x
-                                            Width. Do not specify the measurement unit. eg: cm</small>
+                                        
                                         <div class="invalid-feedback">
                                             Item's dimensions are required
                                         </div>
                                     </div>
+                                    <small class="text-muted">Enter the dimension with the format: Height x
+                                            Length x
+                                            Width. Do not specify the measurement unit. eg: cm</small>
                                 </div>
+
                                 <!-- Item Weight -->
                                 <div class="col-md-4 mb-3" id="weightDiv">
                                     <label for="weight">Item Weight</label>
@@ -248,23 +251,24 @@
                             </div>
 
                             <!-- Auction Details -->
-                            <hr class="mb-4">
-                            <h4 class="mb-3">Auction Details</h4>
-                            <!-- TODO: See if this input should be decided after the pending list is verified -->
-                            <!-- Auction Date -->
-                            <div class="mb-3">
-                                <label for="auctionDate">Auction Date</label>
-                                <div class="input-group">
-                                    <input type="date" class="form-control" id="auctionDate" placeholder="Auction date"
-                                        name="item[auctionDate]" required>
-                                    <div class="invalid-feedback">
-                                        The date of the auction is required
-                                    </div>
+                            <hr class="mb-4">   
+                            <h4 class="mb-3">Pricing Information</h4>
+                            <div class="row">
+                                
+                            
+                            <!-- Item Reserve Price -->
+                            <div class="col-md-4 mb-3" id="reservePriceDiv">
+                                <label for="reservePrice">Item Reserve Price</label>
+                                <input type="text" class="form-control" id="reservePrice" placeholder="XXXXXX"
+                                    name="item[reservePrice]" required>
+                                <small></small>
+                                <div class="invalid-feedback">
+                                    Item's reserve price are required
                                 </div>
                             </div>
 
                             <!-- Estimated Price of the item -->
-                            <div class="mb-3">
+                            <div class="col-md-8 mb-3">
 
                                 <label for="estimatedPrice">
                                     <h5 class="mb-3">Estimated Price</h5>
@@ -289,6 +293,7 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
                             </div>
                             <hr class="mb-4">
 

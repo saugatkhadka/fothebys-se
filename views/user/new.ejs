@@ -1,0 +1,213 @@
+<% include ../partials/newAdminHeader %>
+
+<div class="container">
+	<div class="row">
+		<form class="card" action="/admin/user" method="POST">
+			<input type="hidden" name="_csrf" value=<%=_csrf %> />
+			<!-- TODO: Add two hidden inputs: adminId and adminUserName from the current user/admin creating the user -->
+			<div class="card-header">
+				<h3 class="card-title">Add Users</h3>
+			</div>
+			<div class="card-body">
+				<div class="row">
+					<!-- User Role Card -->
+					<div class="col-sm-12 col-lg-12">
+						<div class="form-group">
+							<label class="form-label">User Role</label>
+							<div class="selectgroup w-100">
+								<label class="selectgroup-item">
+									<input type="radio" name="user[role]" value="admin" id="admin" class="selectgroup-input" onclick="handleClick(this);" required>
+									<span class="selectgroup-button">Admin</span>
+								</label>
+								<label class="selectgroup-item">
+									<input type="radio" name="user[role]" value="staff" id="staff" class="selectgroup-input" onclick="handleClick(this);" required>
+									<span class="selectgroup-button">Staff</span>
+								</label>
+								<label class="selectgroup-item">
+									<input type="radio" name="user[role]" value="buyer" id="buyer" class="selectgroup-input" onclick="handleClick(this);" required >
+									<span class="selectgroup-button">Buyer</span>
+								</label>
+								<label class="selectgroup-item">
+									<input type="radio" name="user[role]" value="seller" id="seller" class="selectgroup-input" onclick="handleClick(this);" required>
+									<span class="selectgroup-button">Seller</span>
+								</label>
+								<label class="selectgroup-item">
+									<input type="radio" name="user[role]" value="joint" id="joint" class="selectgroup-input" onclick="handleClick(this);" required>
+									<span class="selectgroup-button">Joint</span>
+								</label>
+							</div>
+							<small>Select atleast One role </small>
+						</div>
+					</div>
+					<!-- User General Information Card -->
+					<div class="col-sm-12 col-lg-4">
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title">General Information</h3>
+							</div>
+							<div class="card-body">
+								<form>
+									<div class="row">
+										<!-- Avatar Image -->
+										<div class="col-auto">
+											<span class="avatar avatar-xl"></span>
+										</div>
+										<!-- Title -->
+										<div class="col">
+											<div class="form-group">
+												<label class="form-label">Title</label>
+												<input class="form-control" placeholder="Mr/Mrs/Ms" name="user[title]" required autofocus>
+											</div>
+										</div>
+									</div>
+									
+									<!-- User F/L Name -->
+									<div class="row">
+										<!-- FirstName -->
+										<div class="col-lg-6 col-sm-12">
+											<div class="form-group">
+												<label class="form-label">First Name</label>
+												<input class="form-control" placeholder="FirstName" name="user[fname]" required>
+											</div>
+										</div>
+										<!-- LastName -->
+										<div class="col-lg-6 col-sm-12">
+											<div class="form-group">
+												<label class="form-label">Last Name</label>
+												<input class="form-control" placeholder="FirstName" name="user[lname]" required>
+											</div>
+										</div>
+										<div class="col-sm-12 col-lg-12">
+											<div class="form-group">
+												<label class="form-label">Email Address</label>
+												<input type="email" class="form-control" placeholder="your-email@domain.com" name="user[email]" required>
+											</div>
+										</div>
+										<div class="col-sm-12 col-lg-12">
+											<div class="form-group">
+												<label class="form-label">Password</label>
+												<input type="password" class="form-control" value="password"  name="user[password]" required>
+											</div>
+										</div>
+										<div class="col-sm-12 col-lg-12">
+											<div class="form-group">
+												<label class="form-label">Contact Number</label>
+												<input class="form-control" placeholder="0000-000-000" name="user[phone_number]" required>
+											</div>
+										</div>
+										<div class="col-sm-12 col-lg-12">
+											<div class="form-group">
+												<label class="form-label">Contact Address</label>
+												<input class="form-control" placeholder="Helsinki, Napoli" name="user[location]">
+											</div>
+										</div>
+										<div class="col-sm-12 col-lg-12">
+											<div class="form-group">
+												<label class="form-label">Joined On</label>
+												<input type="date" class="form-control" placeholder="" name="user[joined_on]" required>
+											</div>
+										</div>
+									</div>
+									
+								</form>
+							</div>
+						</div>
+					</div>
+					
+
+
+					<div class="col-sm-12 col-lg-8">
+						<!-- User Role Selection Alert -->
+						<div class="alert alert-primary alert-dismissible" role="alert" id="role-alert">
+							<button data-dismiss="alert" class="close"></button>
+						   	Select atleast one <strong>user role</strong> for additional information. 
+						</div>
+
+						<!-- Adminstrator Information Card -->
+						<div class="card" id="adminDiv">
+							<div class="card-header">
+								<h3 class="card-title">Adminstrator Information</h3>
+							</div>
+							<div class="card-body">	
+								<div class="row">
+									<div class="col-lg-12 col-sm-12">
+										<div class="form-group">
+											<label class="form-label">Job Post</label>
+											<input class="form-control" id="admin_post" placeholder="Manager" name="user[admin_post]" required>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+						<!-- Buyer/Seller Information -->
+						<div class="card" id="buyerSellerDiv">
+							<div class="card-header">
+								<h3 class="card-title">Buyer/Seller Information</h3>
+							</div>
+							<div class="card-body">	
+								<div class="row">
+									<div class="col-lg-12 col-sm-12">
+										<div class="form-group">
+											<div class="form-label">Buyer Approved Status</div>
+											<label class="custom-switch">
+												<input type="checkbox" id="buyer_approved_status" name="user[buyer_approved_status]" class="custom-switch-input">
+												<span class="custom-switch-indicator"></span>
+												<span class="custom-switch-description">Buyer's Status has been approved through verfications</span>
+											</label>
+										</div>
+									</div>
+									<div class="col-lg-6 col-sm-12">
+										<div class="form-group">
+											<label class="form-label">Bank Account No.</label>
+											<input class="form-control" id="buyer_bank_account_no" placeholder="XXXX-XXXX-XXXX-XXXX" name="user[buyer_bank_account_no]">
+										</div>
+									</div>
+									<div class="col-lg-6 col-sm-12">
+										<div class="form-group">
+											<label class="form-label">Bank Sort Card</label>
+											<input class="form-control" id="buyer_bank_sort_card" placeholder="Bank Sort Card" name="user[buyer_bank_sort_card]">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					
+						<!-- Additional Information Card -->
+						<div class="card">
+							<div class="card-header">
+								<h3 class="card-title">Additional Information</h3>
+							</div>
+							<div class="card-body">	
+								<div class="row">
+									<div class="col-lg-12 col-sm-12">
+										<div class="form-group">
+
+											<label class="form-label">Note</label>
+											<textarea class="form-control" rows="5" name="user[note]">He likes to eat ice cream during interviews</textarea>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-footer">
+					<button class="btn btn-primary btn-block">Save</button>
+				</div>
+			</div> <!-- Card Body Ends -->		
+		</form>
+	</div>
+</div>
+<!-- User Info selection form input scripts -->
+<script src="/js/user-register-selection.js">
+	// Resetting User form inputs
+	// resetUserInput();
+
+</script>
+
+<!-- TODO: Enable the form validation script after the tests are complete -->
+<!-- <script src="/js/form-validation.js"></script> -->
+
+<% include ../partials/newAdminFooter %>

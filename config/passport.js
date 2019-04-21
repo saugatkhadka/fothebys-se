@@ -25,14 +25,20 @@ passport.use(
     if (!user) {
       return done(null, false, { msg: `Email ${email} not found.` });
     }
-    // Match password
-    user.comparePassword(password, (err, isMatch) => {
-      if (err) { return done(err); }
-      if (isMatch) {
-        return done(null, user);
-      }
-      return done(null, false, { msg: 'Invalid email or password.' });
-    });
+    // Unverified Users do not ghave passwords as they are not supplied with one yet
+    // Thus verification_status must be checked beforehand
+    // if(user.verification_status){
+      // Match password
+      user.comparePassword(password, (err, isMatch) => {
+        if (err) { return done(err); }
+        if (isMatch) {
+          return done(null, user);
+        }
+        return done(null, false, { msg: 'Invalid email or password.' });
+      });
+    // } else {
+    //   return done(null, false, { msg: 'Unverified Account! Contact Administrator' });
+    // }
   });
 }));
 

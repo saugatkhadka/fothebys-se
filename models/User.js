@@ -27,9 +27,7 @@ const UserSchema = new mongoose.Schema({
     id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"
-    },
-    // username is a combination of fname and lname of an admin
-    username: String
+    }
   },
   note: String,
   admin: {

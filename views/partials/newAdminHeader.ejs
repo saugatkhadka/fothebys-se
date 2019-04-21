@@ -15,7 +15,7 @@
   <meta name="HandheldFriendly" content="True">
   <meta name="MobileOptimized" content="320">
   <link rel="icon" href="./favicon.ico" type="image/x-icon" />
-  <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
+  <!-- <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" /> -->
   <!-- Generated: 2018-04-16 09:29:05 +0200 -->
   <title><%= title %></title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -102,27 +102,14 @@
                   <span class="avatar" style="background-image: url(/demo/faces/female/25.jpg)"></span>
                   <span class="ml-2 d-none d-lg-block">
                     <!-- User Name -->
-                    <span class="text-default"><%= user.profile.fname + " " + user.profile.lname %></span>
                     <!-- User Level/Status -->
                     <small class="text-muted d-block mt-1">
-                      <% if(user.role == "admin"){ %>
-                        Administrator
-                      <% } else if(user.role == "staff"){ %>
-                        Staff
-                      <% } else if(user.role == "buyer"){ %>
-                        Buyer
-                      <% } else if(user.role == "seller"){ %>
-                        Seller
-                      <% } else if(user.role == "joint"){ %>
-                        Buyer/Seller
-                      <% } %>
 
                     </small>
                   </span>
                 </a>
                 <!-- Menus -->
                 <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
-                  <a class="dropdown-item" href="/admin/user/<%= user._id %>">
                     <i class="dropdown-icon fe fe-user"></i> Profile
                   </a>
                   <a class="dropdown-item" href="#">

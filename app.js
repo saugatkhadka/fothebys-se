@@ -5,7 +5,7 @@ const bodyParser      = require("body-parser");
 const lusca           = require('lusca');
 const dotenv          = require('dotenv').config();  // Allowing the env file to load and use env variables in .env file
 const MongoStore      = require('connect-mongo')(session);
-const flash           = require('express-flash');
+const flash           = require('express-flash'); //using connect-flash instead of connect-flash
 const chalk           = require('chalk');
 const methodOverride  = require("method-override");
 const expressSanitizer = require("express-sanitizer");
@@ -20,18 +20,26 @@ const moment          = require('moment');
 
 // For temporary use only
 // Needs refactor
-// TODO: Refactor the routers and the controllers
+// TODO: [Completed] Refactor the routers and the controllers
 // DB Models
 var Item = require("./models/Item");
 var User = require("./models/User");
 var Counter = require('./models/Counter');
+
+
+/**
+ * Seeds (DB)
+ */
+// var seedUser = require('./seeds/user');
+// Runs as soon as the server restarts or redirects or any action is carried out
+// seedUser();
 
 /**
  * Controllers (route handlers).
  */
 var indexController = require('./controllers/index');
 var adminController = require('./controllers/admin');
-var usersController = require('./controllers/user');
+var userController = require('./controllers/user');
 var itemController = require('./controllers/item');
 
 
@@ -76,8 +84,6 @@ app.use(expressSanitizer());
 app.use(logger('dev'));
 // app.use(express.json());
 
-//Changed from false to true
-// app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 
@@ -146,29 +152,70 @@ app.use((req, res, next) => {
 */
 // Main Route
 app.get('/', indexController.index);
+
 app.get('/login', indexController.getLogin);
 app.post('/login', indexController.postLogin);
 app.get('/logout', passportConfig.isAuthenticated, indexController.getLogout);
 
+
+// Auction Site Front Facing Routes
+app.get('/request-estimate', indexController.getRequestEstimatePage);
+app.get('/request-account', indexController.getRequestAccountPage);
+app.post('/request-account', indexController.postRequestAccount);
+app.get('/item-submission', indexController.getItemSubmissionPage);
+
+
+
+
+
+
 // Admin Routes
 // TODO: Add middleware in passport config to check if the given user is admin or not
 // Some routes cannot be access by buyers and seller
-app.get('/admin', passportConfig.isAuthenticated, adminController.getDashboard);
-app.get('/admin/user', passportConfig.isAuthenticated, adminController.getUserList);
-app.post('/admin/user', passportConfig.isAuthenticated, adminController.postUser);
-app.get('/admin/user/new', passportConfig.isAuthenticated, adminController.getUserForm); 
+app.get('/admin', adminController.getDashboard);
+// USERS
+app.get('/admin/user', userController.index);
+app.post('/admin/user', userController.postUser);
+app.get('/admin/user/new', userController.getNewUser); 
+app.get('/admin/user/:id', userController.getUser);
+app.delete("/admin/user/:id", userController.deleteUser);
+app.get('/admin/user/:id/edit', userController.getEditUser);
 
 // Items Pages
 // No current page view
 // TODO: Add new individual item page
-app.get("/admin/item", passportConfig.isAuthenticated, itemController.getItemList);
-app.post('/admin/item', passportConfig.isAuthenticated, itemController.postItem);
-app.get('/admin/item/new', passportConfig.isAuthenticated, itemController.getItemCreate);
+app.get("/admin/item", itemController.getItemList);
+app.post('/admin/item', itemController.postItem);
+app.get('/admin/item/new', itemController.getItemCreate);
+// TODO: Add middleware to check item ownership and who uploaded, so only who added the item can delete it or the admins. 
+// Clarify and confirm feature
+app.delete("/admin/item/:id", itemController.deleteItem);
+app.get('/admin/item/:id/edit', itemController.getItemEdit);
 
-// Delete/Destroy Item Route
-// TODO: Add middleware to check item ownership and who uploaded, so only who added the item can delete it or the admins. Clarify and confirm feature
-app.delete("/admin/item/:id", passportConfig.isAuthenticated, itemController.deleteItem);
-app.get('/admin/item/:id/edit', passportConfig.isAuthenticated, itemController.getItemEdit);
+// C - Create
+// R - Read
+// U - Update
+// D - Delete
+
+
+// Admin
+  // Auction
+  // Cataologue
+  // Features Item: Front End Control
+  // Sales
+  // Commision Bids
+  // Email Messages Notification
+
+
+// User: Buyers/Seller Dashboard
+  // Item Bought
+  // Item Sold
+  // Commision Bids
+  // Notification
+  // Profile
+
+
+
 
 
 // Auction View

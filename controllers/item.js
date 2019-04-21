@@ -8,18 +8,17 @@ var Counter = require('../models/Counter');
 exports.getItemList = (req, res, next) => {
 
     Item.find({},(err, founditems) => {
-            if(err) {return next(err)};
-            // TODO: Implement a way to display errors for already exisiting item
-            if(founditems) {
-                // console.log(founditems);
-                res.render('admin/item', {
-                    title: 'Items',
-                    items: founditems,
-                    selectedTab: 'item'
-                });
-            };
-        }
-    );
+        if(err) {return next(err)};
+        // TODO: Implement a way to display errors for already exisiting item
+        if(founditems) {
+            // console.log(founditems);
+            res.render('admin/item', {
+                title: 'Items',
+                items: founditems,
+                selectedTab: 'item'
+            });
+        };
+    });
 }
 
 
@@ -30,16 +29,16 @@ exports.getItemList = (req, res, next) => {
 exports.postItem = (req, res, next) => {
 
     // Creates/Initializes the counter for the first time
-    // Counter.create({lastCounter: 0}, (err, counter) => {
-    //   if(err) {
-    //     console.log("ERROR WITH THE COUNTER");
-    //     res.redirect("back");
-    //   } else {
-    //     counter.save();
-    //     console.log("COUNTER SAVED");
-    //     res.redirect("back");
-    //   }
-    // });
+    Counter.create({lastCounter: 0}, (err, counter) => {
+      if(err) {
+        console.log("ERROR WITH THE COUNTER");
+        res.redirect("back");
+      } else {
+        counter.save();
+        console.log("COUNTER SAVED");
+        res.redirect("back");
+      }
+    });
 
 
     // TODO: Fix the way that counter updates
@@ -159,7 +158,7 @@ exports.deleteItem = (req, res, next) => {
             console.log("Item successfully deleted");
             res.redirect("back");
         }
-    })
+    });
 }
 
 /* 

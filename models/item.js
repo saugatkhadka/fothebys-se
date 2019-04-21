@@ -1,18 +1,13 @@
 const mongoose = require('mongoose');
 
 const itemSchema = new mongoose.Schema({
-	uid: String,
-	title: String,	
+	uid: String, //lot reference number
+	lot_number: Number,
+
+	name: String,	
 	category: String,	
-	classification: String,	
-	artistName: String,	
-	yearProduced: Number,	
-	itemDesc: String,	
-	auctionDate: String,	
-	estimatedPrice: {
-		minEstimatedPrice: String,
-		maxEstimatedPrice: String
-	},
+	classification: String,
+
 	categoryInfo: {
 		drawingMedium: String,
 		paintingMedium: String,
@@ -27,7 +22,53 @@ const itemSchema = new mongoose.Schema({
 		// },
 		dimension: String,
 		weight: Number
+	},
+
+	authorship: String,	
+	yearProduced: Number,	
+	itemDesc: String,
+
+	provenanceDetail: String,
+	conditionReport: String,
+
+	auction: {
+		id: {
+	        type: mongoose.Schema.Types.ObjectId,
+	        ref: "Auction"
+     	}
+    },
+
+	reservePrice: String,
+	estimatedPrice: {
+		minEstimatedPrice: String,
+		maxEstimatedPrice: String
+	},
+	salesPrice: Number,
+
+	authentic: Boolean,
+
+	appriaserName: String, // Use appraiser Object ID id possible
+	dateAppraised: Date,
+
+	notes: String,
+	pictures: [String],
+
+	seller: {
+		id: {
+	        type: mongoose.Schema.Types.ObjectId,
+	        ref: "User"
+     	},
+	    name: String
+	},
+
+	buyer: {
+		id: {
+	        type: mongoose.Schema.Types.ObjectId,
+	        ref: "User"
+     	},
+	    name: String
 	}
+	
 }, {timestamps: true});
 
 const Item = mongoose.model('Item', itemSchema);
