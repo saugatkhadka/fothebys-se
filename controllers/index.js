@@ -1,6 +1,7 @@
 // var express = require('express');
 // var router = express.Router();
-
+var Auction = require("../models/Auction");
+var Item = require("../models/Item");
 const passport        = require('passport');
 const flash           = require('express-flash');
 
@@ -22,9 +23,25 @@ var User = require('../models/User');
 */
 
 exports.index = (req, res, next) => {
-  res.render('main/index', { 
-  	title: "Home"
+
+  Auction.find({})
+  .sort({
+    _id: -1
+  })
+  .populate('lotItems')
+  .exec((err, foundAuctions) => {
+    if (err) {
+      return next(err)
+    }
+    if (foundAuctions) {
+      res.render('main/index', { 
+        title: "Home",
+        auctions: foundAuctions
+      });
+    }
   });
+
+
 }
 
 
@@ -111,8 +128,6 @@ exports.getRequestAccountPage = (req, res) => {
   	title: "Request an Account"
   });
 }
-
-
 
 /**
  * POST /request-account

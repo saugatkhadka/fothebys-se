@@ -7,14 +7,14 @@
                 <div class="card">
                     <div class="row custom-padding">
                         <div class="col-sm-12 col-lg-8">
-                            <h2>Users</h2>
+                            <h2>Auction</h2>
                         </div>
                         <div class="col-sm-12 col-lg-4">
                             <div class="card custom-padding">
-                                <h2>User Registration</h2>
-                                <a class="btn btn-block btn-danger btn-lg" href="/admin/user/new">Add Users</a>
-                                <small>Add new user</small>
-                                <small>Administrators, Staff, Buyers, Sellers, Joint</small>
+                                <h2>Auction Registration</h2>
+                                <a class="btn btn-block btn-danger btn-lg" href="/admin/auction/new">Add Auction</a>
+                                <small>Add new auction</small>
+                                <small>90 items</small>
                             </div>
                         </div>
                     </div>
@@ -23,44 +23,41 @@
                     <table class="table table-hover table-outline table-vcenter text-nowrap card-table">
                         <thead>
                             <tr>
-                                <th class="text-center w-1"><i class="icon-people"></i></th>
-                                <th>User</th>
-                                <th class="text-center">Role</th>
-                                <th>Activity</th>
+                                <th>Auction Name</th>
+                                <th class="text-center">Theme</th>
+                                <th>Location</th>
+                                <th>Lot Count</th>
                                 <th></th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            <% users.forEach((foundUser) => { %>
-                                
-
+                            <% auctions.forEach((auction) => { %>
                             <tr>
-                                <td class="text-center">
-                                    <div class="avatar d-block" style="background-image: url(<%= foundUser.gravatar(60) %>)">
-                                    </div>
-                                </td>
                                 <td>
-                                    <div><a href="/admin/user/<%= foundUser._id %>"><%= foundUser.profile.fname + " " + foundUser.profile.lname %></a></div>
+                                    <div><a href="/admin/auction/<%= auction._id %>"><%= auction.name %></a></div>
                                     <div class="small text-muted">
                                         <!-- TODO: Format Date -->
-                                        Registered: <%= new Date(foundUser.joined_on).toDateString(); %>
+                                        Created On: <%= new Date(auction.createdAt).toDateString(); %>
                                     </div>
                                 </td>
                                 <td class="text-center">
-                                    <div><%= foundUser.role %></div>
+                                    <div><%= auction.theme %></div>
                                 </td>
                                 <td>
-                                    <div class="small text-muted">Last login</div>
-                                    <div>4 minutes ago</div>
+                                    <div class="small text-muted"><%= auction.location %></div>
+                                    <div><%= auction.period %></div>
+                                </td>
+                                <td>
+                                    <div><%= auction.lotItems.length %></div>
                                 </td>
                                 <td class="text-right">
-                                  <a href="/admin/user/<%= foundUser._id %>/edit" class="btn btn-secondary btn-sm">Edit</a>
+                                  <a href="/admin/auction/<%= auction._id %>/edit" class="btn btn-secondary btn-sm">Edit</a>
 
                                   <div class="item-action dropdown">
                                       <button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">Actions</button>
                                       <div class="dropdown-menu dropdown-menu-right">
-                                          <a href="/admin/user/<%= foundUser._id %>/edit" class="dropdown-item"><i class="dropdown-icon fe fe-edit"></i> Edit </a>
+                                          <a href="/admin/auction/<%= auction._id %>/edit" class="dropdown-item"><i class="dropdown-icon fe fe-edit"></i> Edit </a>
                                           <a href="javascript:void(0)" class="dropdown-item"><i class="dropdown-icon fe fe-message-square"></i> Something else here</a>
                                           <div class="dropdown-divider"></div>
                                           <a href="javascript:void(0)" class="dropdown-item"><i class="dropdown-icon fe fe-link"></i> Separated link</a>
@@ -70,7 +67,7 @@
                                   <td>
                                     <a class="icon" href="javascript:void(0)">
                                       
-                                      <form class="icon" action="/admin/user/<%= foundUser._id %>?_method=DELETE" id="table-form-delete" method="POST">
+                                      <form class="icon" action="/admin/auction/<%= auction._id %>?_method=DELETE" id="table-form-delete" method="POST">
                                         <input type="hidden" name="_csrf" value=<%=_csrf %> />
                                         <input type="hidden" name="current_user_id" value="<%= user._id %>">
                                         <button class="btn btn-danger btn-sm"><i class="fe fe-trash"></i></button>

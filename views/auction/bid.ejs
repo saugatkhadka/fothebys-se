@@ -1,0 +1,37 @@
+<% include ../partials/newAdminHeader.ejs %>
+
+<div class="container">
+
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Commission Bid </h3>
+    </div>
+    <div class="card-body">
+      <form class="" action="/admin/auction/<%= auctionID %>/item/<%= itemID %>>/bid" method="POST">
+        <input type="hidden" name="_csrf" value=<%= _csrf %> />
+        <input type="hidden" name="bid[auctionID]" value="<%= auctionID %>">
+        <input type="hidden" name="bid[itemID]" value="<%= itemID %>">
+        <div class="text-center mb-4">
+          <p>Add a new commission bid to an Auction Item</p>
+        </div>
+
+        <div class="form-label-group mb-4">
+          <label for="openingAmt">Opening Amount</label>
+          <input type="text" id="openingAmt" name="bid[opening]" class="form-control" placeholder="0000" required autofocus>
+          
+        </div>
+
+        <div class="form-label-group mb-4">
+          <label for="maxAmt">Maximum Amount</label>
+          <input type="text" id="maxAmt" name="bid[maximum]" class="form-control" placeholder="000000" required>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Bid</button>
+      </form>
+    </div>
+  </div>
+
+
+
+</div>
+
+<% include ../partials/newAdminFooter.ejs %>

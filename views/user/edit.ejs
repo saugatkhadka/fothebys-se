@@ -2,7 +2,7 @@
 
 <div class="container">
 	<div class="row">
-		<form class="card" action="/admin/user" method="POST">
+		<form class="card" action="/admin/user/<%= foundUser._id %>?_method=PUT" method="POST">
 			<input type="hidden" name="_csrf" value=<%=_csrf %> />
 			<div class="card-header">
 				<h3 class="card-title">Edit User</h3>
@@ -99,7 +99,7 @@
 										<div class="col-sm-12 col-lg-12">
 											<div class="form-group">
 												<label class="form-label">Email Address</label>
-												<input type="email" class="form-control" placeholder="your-email@domain.com" name="user[email]" value="<%= foundUser.profile.email %>" required>
+												<input type="email" class="form-control" placeholder="your-email@domain.com" name="user[email]" value="<%= foundUser.email %>" required>
 											</div>
 										</div>
 										<div class="col-sm-12 col-lg-12">
@@ -119,13 +119,6 @@
 												<label class="form-label">Contact Address</label>
 												<input class="form-control" placeholder="Helsinki, Napoli" name="user[location]" value="<%= foundUser.profile.location %>"> 
 											</div>
-										</div>
-										<div class="col-sm-12 col-lg-12">
-											<div class="form-group">
-												<label class="form-label">Joined On</label>
-												<input type="date" class="form-control" placeholder="" name="user[joined_on]" value="<%= %>" required>
-											</div>
-											<% console.log(foundUser); %> 
 										</div>
 									</div>
 									
@@ -153,7 +146,7 @@
 									<div class="col-lg-12 col-sm-12">
 										<div class="form-group">
 											<label class="form-label">Job Post</label>
-											<input class="form-control" id="admin_post" placeholder="Manager" name="user[admin_post]" required>
+											<input type="text" class="form-control" id="admin_post" name="user[admin_post]" value="<%= foundUser.admin.post %>" required>
 										</div>
 									</div>
 								</div>

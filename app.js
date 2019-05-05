@@ -16,13 +16,26 @@ const path            = require('path');
 const cookieParser    = require('cookie-parser');
 const logger          = require('morgan');
 const moment          = require('moment');
+const multer          = require('multer');
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, 'uploads'));
+  },
+
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+})
+
+var upload = multer({ storage: storage });
 
 
 // For temporary use only
 // Needs refactor
 // TODO: [Completed] Refactor the routers and the controllers
 // DB Models
-var Item = require("./models/Item");
+var Item = require("./models/Item").default;
 var User = require("./models/User");
 var Counter = require('./models/Counter');
 
@@ -41,6 +54,7 @@ var indexController = require('./controllers/index');
 var adminController = require('./controllers/admin');
 var userController = require('./controllers/user');
 var itemController = require('./controllers/item');
+var auctionController = require('./controllers/auction');
 
 
 /* 
@@ -86,7 +100,7 @@ app.use(logger('dev'));
 
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
-
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 // Sets view path
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -113,7 +127,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use((req, res, next) => {
-  if (req.path === '/api/upload') {
+  if (req.path === '/admin/item/new' 
+    || req.path === '/admin/item/edit') {
     next();
   } else {
     lusca.csrf()(req, res, next);
@@ -146,11 +161,19 @@ app.use((req, res, next) => {
 });
 
 
+// Middleware
+const isAdmin = (req, res, next) => {
+  if(req.user.role == 'admin'){
+      return next();
+  }
+  res.redirect("back");
+}
+
 
 /*
 ** ROUTES
 */
-// Main Route
+// Main Route: Front
 app.get('/', indexController.index);
 
 app.get('/login', indexController.getLogin);
@@ -159,38 +182,53 @@ app.get('/logout', passportConfig.isAuthenticated, indexController.getLogout);
 
 
 // Auction Site Front Facing Routes
-app.get('/request-estimate', indexController.getRequestEstimatePage);
-app.get('/request-account', indexController.getRequestAccountPage);
-app.post('/request-account', indexController.postRequestAccount);
-app.get('/item-submission', indexController.getItemSubmissionPage);
+app.get('/request-estimate', passportConfig.isAuthenticated,  indexController.getRequestEstimatePage);
+app.get('/request-account', passportConfig.isAuthenticated,  indexController.getRequestAccountPage);
+app.post('/request-account', passportConfig.isAuthenticated,  indexController.postRequestAccount);
+app.get('/item-submission', passportConfig.isAuthenticated,  indexController.getItemSubmissionPage);
 
 
+// app.get('/search', indexController.getSearch);
 
 
-
-
-// Admin Routes
+// TODO: put passportConfig.isAuthenticated back to the routes
+// Admin Routes: Back
 // TODO: Add middleware in passport config to check if the given user is admin or not
 // Some routes cannot be access by buyers and seller
-app.get('/admin', adminController.getDashboard);
+app.get('/admin', passportConfig.isAuthenticated, adminController.getDashboard);
 // USERS
-app.get('/admin/user', userController.index);
-app.post('/admin/user', userController.postUser);
-app.get('/admin/user/new', userController.getNewUser); 
-app.get('/admin/user/:id', userController.getUser);
-app.delete("/admin/user/:id", userController.deleteUser);
-app.get('/admin/user/:id/edit', userController.getEditUser);
+app.get('/admin/user', passportConfig.isAuthenticated, isAdmin, userController.index);
+app.post('/admin/user', passportConfig.isAuthenticated, isAdmin, userController.postUser);
+
+app.get('/admin/user/new', passportConfig.isAuthenticated, isAdmin, userController.getNewUser); 
+app.put('/admin/user/:id', passportConfig.isAuthenticated, isAdmin, userController.putUser);
+
+app.get('/admin/user/:id', passportConfig.isAuthenticated, isAdmin, userController.getUser);
+app.delete("/admin/user/:id", passportConfig.isAuthenticated, isAdmin, userController.deleteUser);
+app.get('/admin/user/:id/edit', passportConfig.isAuthenticated, isAdmin, userController.getEditUser);
 
 // Items Pages
 // No current page view
 // TODO: Add new individual item page
-app.get("/admin/item", itemController.getItemList);
-app.post('/admin/item', itemController.postItem);
-app.get('/admin/item/new', itemController.getItemCreate);
+
+app.get("/admin/item", passportConfig.isAuthenticated, isAdmin,  itemController.getItemList);
+app.get('/admin/sales', passportConfig.isAuthenticated, isAdmin,  itemController.getItemSales);
+
+app.post('/admin/item/new', passportConfig.isAuthenticated, isAdmin,  upload.array('images', 6), itemController.postItem);
+app.put("/admin/item/edit", passportConfig.isAuthenticated, isAdmin,  upload.array('images', 6), itemController.updateItem);
+
+
+// app.post('/admin/item/upload',  itemController.postFileUpload);
+app.get('/admin/item/new', passportConfig.isAuthenticated, isAdmin,  itemController.getItemCreate);
+app.get('/admin/item/:id', passportConfig.isAuthenticated, itemController.getItem )
 // TODO: Add middleware to check item ownership and who uploaded, so only who added the item can delete it or the admins. 
 // Clarify and confirm feature
-app.delete("/admin/item/:id", itemController.deleteItem);
-app.get('/admin/item/:id/edit', itemController.getItemEdit);
+
+app.delete("/admin/item/:id", passportConfig.isAuthenticated, isAdmin,  itemController.deleteItem);
+app.get('/admin/item/:id/edit', passportConfig.isAuthenticated, isAdmin,  itemController.getItemEdit);
+app.post('/admin/item/:id/sold', passportConfig.isAuthenticated, isAdmin,  itemController.postSoldItem);
+app.get('/admin/item/:id/sold', passportConfig.isAuthenticated, isAdmin,  itemController.getSoldItemForm);
+
 
 // C - Create
 // R - Read
@@ -200,7 +238,19 @@ app.get('/admin/item/:id/edit', itemController.getItemEdit);
 
 // Admin
   // Auction
-  // Cataologue
+app.get('/admin/auction', passportConfig.isAuthenticated, isAdmin, auctionController.getIndex);
+app.post('/admin/auction', passportConfig.isAuthenticated, isAdmin, auctionController.postAuction);
+app.get('/admin/bids', passportConfig.isAuthenticated, auctionController.getCommissionBids);
+
+app.get('/admin/auction/new', passportConfig.isAuthenticated, isAdmin, auctionController.getNewAuction);
+app.delete("/admin/auction/:id", passportConfig.isAuthenticated, isAdmin, auctionController.deleteItem);
+app.get('/admin/auction/:id', passportConfig.isAuthenticated, auctionController.getAuction);
+app.post('/admin/auction/:id/item/:itemID', passportConfig.isAuthenticated, isAdmin, auctionController.postAuctionItem);
+app.get('/admin/auction/:id/item/:itemID/bid', passportConfig.isAuthenticated, auctionController.getBidItemForm);
+app.post('/admin/auction/:id/item/:itemID/bid', passportConfig.isAuthenticated, auctionController.postBidItemForm);
+
+
+  // Catalogue
   // Features Item: Front End Control
   // Sales
   // Commision Bids
@@ -250,5 +300,7 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
+
+
 
 module.exports = app;

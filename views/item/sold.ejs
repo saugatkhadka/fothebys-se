@@ -1,0 +1,33 @@
+<% include ../partials/newAdminHeader %>
+
+
+<div class="container">
+  <div class="row">
+    <div class="col col-login mx-auto">
+
+      <form class="card" action="/admin/item/<%= itemID %>/sold" method="POST">
+			<input type="hidden" name="_csrf" value=<%=_csrf %> />
+
+        <div class="card-body p-6">
+          <div class="card-title">Item Sales Account</div>
+
+          <div class="form-group">
+            <label class="form-label">Sold To</label>
+            <input type="text" class="form-control" name="sales[userID]" placeholder="Enter ID">
+            <small>Enter the id for the user</small>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Sold Price</label>
+            <input type="text" class="form-control" name="sales[price]" placeholder="Enter Price">
+          </div>
+          <div class="form-footer">
+            <button type="submit" class="btn btn-primary btn-block">Submit sales</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<% include ../partials/newAdminFooter %>

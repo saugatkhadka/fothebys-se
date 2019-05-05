@@ -1,0 +1,96 @@
+<% include ../partials/newAdminHeader %>
+
+
+<div class="container">
+
+  <div class="page-header">
+    <h1 class="page-title">Items</h1>
+  </div>
+
+  <div class="row row-cards row-deck">
+    <div class="col-12">
+      <div class="card">
+        <div class="card">
+            <div class="row custom-padding">
+                <div class="col-sm-12 col-lg-8">
+                    <h2>Items</h2>
+                </div>
+                <div class="col-sm-12 col-lg-4">
+                    <div class="card custom-padding">
+                        <h2>Item Registration</h2>
+                        <a class="btn btn-block btn-danger btn-lg" href="/admin/item/new">Add Item</a>
+                        <small>Add new items</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table card-table table-vcenter text-nowrap">
+            <thead>
+              <tr>
+								<th></th>
+								<th class="w-1">Ref ID</th>
+								<th>Item Name</th>
+								<th>Category</th>
+								<th>Classification</th>
+								<th>Artist</th>
+								<th>Year</th>
+								<th></th>
+								<th></th>
+							</tr>
+            </thead>
+            <tbody>
+						
+							<% items.forEach((item) => { %>
+							<tr>
+								<td><span class="avatar" style="background-image: url('/uploads/<%= item.images[0].filename %>')"></span></td>
+								<td><span class="text-muted"><%= item.reference_no %></span></td>
+								<td><a href="/admin/item/<%= item._id %>" class="text-inherit"><%= item.name %></a></td>
+								<td><%= item.category %></td>
+								<td><%= item.classification %></td>
+								<td><%= item.authorship %></td>
+								<td><%= item.yearProduced %></td>
+									<!-- TODO: Show the full date fo the item creation in the item specific page -->
+									<!-- <td><%= item.createdAt.toDateString() %></td> -->
+								<td class="text-right">
+									<a href="/admin/item/<%= item._id %>/sold" class="btn btn-secondary btn-sm">Sold</a>
+									<a href="/admin/item/<%= item._id %>/edit" class="btn btn-secondary btn-sm">Edit</a>
+
+									<div class="item-action dropdown">
+										<button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">Actions</button>
+										<div class="dropdown-menu dropdown-menu-right">
+												<a href="/admin/item/<%= item._id %>/edit" class="dropdown-item"><i class="dropdown-icon fe fe-edit"></i> Edit </a>
+												<a href="/admin/item/<%= item._id %>" class="dropdown-item"><i class="dropdown-icon fe fe-info"></i> View </a>
+										</div>
+										
+									</div>
+								</td>
+								<td>
+									<a class="icon" href="javascript:void(0)">
+										
+										<form class="icon" action="/admin/item/<%= item._id %>?_method=DELETE" id="table-form-delete" method="POST">
+												<input type="hidden" name="_csrf" value=<%=_csrf %> />
+												<button class="btn btn-danger btn-sm"><i class="fe fe-trash"></i></button>
+										</form>
+									</a>
+								</td>
+							</tr>
+	
+							<% }); %>
+							
+            </tbody>
+						
+          </table>
+					<% if(items.length == 0){ %>
+						<div class="text-center">
+						<p class="h5 p-lg-6">No item matched that query. Please try again</p>
+						</div>
+					<% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<% include ../partials/newAdminFooter %>

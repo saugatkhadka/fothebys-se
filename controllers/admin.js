@@ -1,4 +1,5 @@
 var User = require("../models/User");
+const flash = require('express-flash');
 
 
 /* 

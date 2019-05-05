@@ -1,0 +1,94 @@
+<% include ../partials/newAdminHeader %>
+
+
+<div class="container">
+
+  <div class="page-header">
+    <h1 class="page-title">Item Sales</h1>
+  </div>
+
+  <div class="row row-cards row-deck">
+    <div class="col-12">
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table card-table table-vcenter text-nowrap">
+            <thead>
+              <tr>
+                <th></th>
+                <th class="w-1">Item Ref no</th>
+                <th>Item Name</th>
+                <th>Buyer</th>
+                <th>Price</th>
+                <th>Sold On</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% var sum = 0; %>
+              <% items.forEach((item) => { %>
+                <% if(item.sold){ %>
+                <% sum = sum + item.salesPrice %>
+                
+                <tr>
+                  <td><span class="avatar"
+                      style="background-image: url('/uploads/<%= item.images[0].filename %>')"></span>
+                  </td>
+                  <td><span class="text-muted"><%= item.reference_no %></span></td>
+                  <td><a href="/admin/item/<%= item._id %>" class="text-inherit"><%= item.name %></a></td>
+                  <td><%= item.buyer.id.profile.fname + ' ' + item.buyer.id.profile.lname %></td>
+                  <td>$<%= item.salesPrice %></td>
+                  <td><%= new Date(item.sold_on).toDateString(); %></td>
+                  <!-- TODO: Show the full date fo the item creation in the item specific page -->
+                  <!-- <td><%= item.createdAt.toDateString() %></td> -->
+                  <td class="text-right">
+                    <a href="/admin/item/<%= item._id %>/sold" class="btn btn-secondary btn-sm">Sold</a>
+                    <a href="/admin/item/<%= item._id %>/edit" class="btn btn-secondary btn-sm">Edit</a>
+
+                    <div class="item-action dropdown">
+                      <button class="btn btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown">Actions</button>
+                      <div class="dropdown-menu dropdown-menu-right">
+                        <a href="/admin/item/<%= item._id %>/edit" class="dropdown-item"><i
+                            class="dropdown-icon fe fe-edit"></i> Edit </a>
+                        <a href="/admin/item/<%= item._id %>" class="dropdown-item"><i
+                            class="dropdown-icon fe fe-info"></i> View </a>
+                      </div>
+
+                    </div>
+                  </td>
+                  <td>
+                    <a class="icon" href="javascript:void(0)">
+
+                      <form class="icon" action="/admin/item/<%= item._id %>?_method=DELETE" id="table-form-delete"
+                        method="POST">
+                        <input type="hidden" name="_csrf" value=<%=_csrf %> />
+                        <button class="btn btn-danger btn-sm"><i class="fe fe-trash"></i></button>
+                      </form>
+                    </a>
+                  </td>
+                </tr>
+                <% } %>
+              <% }); %>
+            
+              <div class="card">
+                  <div class="card-body text-center">
+                    <div class="h5">Today Sales</div>
+                    <div class="display-4 font-weight-bold mb-4">$<%= sum %></div>
+                  </div>
+                </div>
+            </tbody>
+
+          </table>
+          <% if(items.length == 0){ %>
+          <div class="text-center">
+            <p class="h5 p-lg-6">No item matched that query. Please try again</p>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<% include ../partials/newAdminFooter %>

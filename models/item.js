@@ -1,12 +1,25 @@
+/* eslint-disable no-mixed-spaces-and-tabs */
 const mongoose = require('mongoose');
 
 const itemSchema = new mongoose.Schema({
-	uid: String, //lot reference number
+	reference_no: String, //lot reference number
 	lot_number: Number,
 
 	name: String,	
 	category: String,	
-	classification: String,
+  classification: String,
+  images: [
+      {    
+        fieldname: String,
+        originalname: String,
+        encoding: String,
+        mimetype: String,
+        destination: String,
+        filename: String,
+        path: String,
+        size: Number
+    }
+  ],
 
 	categoryInfo: {
 		drawingMedium: String,
@@ -25,8 +38,8 @@ const itemSchema = new mongoose.Schema({
 	},
 
 	authorship: String,	
-	yearProduced: Number,	
-	itemDesc: String,
+	yearProduced: String,	
+	description: String,
 
 	provenanceDetail: String,
 	conditionReport: String,
@@ -35,30 +48,33 @@ const itemSchema = new mongoose.Schema({
 		id: {
 	        type: mongoose.Schema.Types.ObjectId,
 	        ref: "Auction"
-     	}
-    },
+      }
+  },
 
 	reservePrice: String,
 	estimatedPrice: {
-		minEstimatedPrice: String,
-		maxEstimatedPrice: String
+		min: String,
+		max: String
 	},
 	salesPrice: Number,
+	sold_on: Date,
+	sold: Boolean,
+	// appriaserName: String, // Use appraiser Object ID id possible
+	// dateAppraised: Date,
 
-	authentic: Boolean,
-
-	appriaserName: String, // Use appraiser Object ID id possible
-	dateAppraised: Date,
-
-	notes: String,
-	pictures: [String],
-
+  notes: String,
+  bids: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "CommissionBid"
+	 	}
+	],
 	seller: {
 		id: {
 	        type: mongoose.Schema.Types.ObjectId,
 	        ref: "User"
      	},
-	    name: String
+    name: String
 	},
 
 	buyer: {
@@ -66,9 +82,13 @@ const itemSchema = new mongoose.Schema({
 	        type: mongoose.Schema.Types.ObjectId,
 	        ref: "User"
      	},
-	    name: String
-	}
-	
+    name: String
+  },
+  evaluation_requested: Boolean,
+  added_by: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  }
 }, {timestamps: true});
 
 const Item = mongoose.model('Item', itemSchema);

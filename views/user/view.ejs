@@ -1,67 +1,109 @@
 <% include ../partials/newAdminHeader %>
 
 <div class="container">
-    <div class="row">
-        <div class="col-lg-4">
-            <div class="card card-profile">
-                <div class="card-header"
-                    style="background-image: url(/demo/photos/eberhard-grossgasteiger-311213-500.jpg);">
-                </div>
-                <div class="card-body text-center">
-                    <img class="card-profile-img" src="/demo/faces/male/16.jpg">
-
-                    <h3 class="mb-3"><%= foundUser.profile.fname + " " +  foundUser.profile.lname %></h3>
-                    <p class="text-muted mb-0">
-                          <% if(foundUser.role == "admin"){ %>
-                            Administrator
-                          <% } else if(foundUser.role == "staff"){ %>
-                            Staff
-                          <% } else if(foundUser.role == "buyer"){ %>
-                            Buyer
-                          <% } else if(foundUser.role == "seller"){ %>
-                            Seller
-                          <% } else if(foundUser.role == "joint"){ %>
-                            Buyer/Seller
-                          <% } %>
-                      </p>
-                    <p class="mb-4">
-                        <%= foundUser.note %>
-                    </p>
-
-                    <button class="btn btn-outline-primary btn-sm">
-                        Send Message
-                    </button>
-
-                    <a href="/admin/user/<%= foundUser._id%>/edit">
-                        <button class="btn btn-outline-primary btn-sm">Edit</button>
-                    </a>
-                </div>
-            </div>
+  <div class="row">
+    <div class="col-lg-4">
+      <div class="card card-profile">
+        <div class="card-header" style="background-image: url(/demo/photos/eberhard-grossgasteiger-311213-500.jpg);">
         </div>
-        <div class="col-lg-8">
-          <div class="card">
-            <div class="card"> Verified: <% if(foundUser.verification_status){ %>
-                Verfied
-              <% } else { %>
-                Unverfied
-              <% } %></div>
-            <div class="card">
-              Location: <%= foundUser.profile.location %>
-            </div>
-            <div class="card">
-              Phone Number: <%= foundUser.profile.phone_number %>
-            </div>
-            <div class="card">
-              Joined On: <%= foundUser.joined_on %>
-            </div>
-            <div class="card">
-              Note: <%= foundUser.note %>
-            </div>
+        <div class="card-body text-center">
+          <img class="card-profile-img" src="/demo/faces/male/16.jpg">
 
-             
-          </div>
+          <h3 class="mb-3"><%= foundUser.profile.fname + " " +  foundUser.profile.lname %></h3>
+          <small><%= foundUser._id %></small>
+          <p class="text-muted mb-0">
+            <% if(foundUser.role == "admin"){ %>
+            Administrator
+            <% } else if(foundUser.role == "staff"){ %>
+            Staff
+            <% } else if(foundUser.role == "buyer"){ %>
+            Buyer
+            <% } else if(foundUser.role == "seller"){ %>
+            Seller
+            <% } else if(foundUser.role == "joint"){ %>
+            Buyer/Seller
+            <% } %>
+          </p>
+          <p class="mb-4">
+            <%= foundUser.note %>
+          </p>
+
+          <%# <button class="btn btn-outline-primary btn-sm">
+            Send Message
+          </button> %>
+
+          <a href="/admin/user/<%= foundUser._id%>/edit">
+            <button class="btn btn-outline-primary btn-sm">Edit</button>
+          </a>
         </div>
+      </div>
     </div>
+    <div class="col-lg-8">
+
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Auction</h3>
+        </div>
+
+        <div class="card-body">
+          <div class="media mb-5">
+            <div class="media-body">
+              <h5><% if(foundUser.verification_status){ %>
+                Verfied
+                <% } else { %>
+                Unverfied
+                <% } %> <small><%= foundUser.admin.post %></small></h5>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <div class="h6">Phone Number</div>
+              <p><%= foundUser.profile.phone_number %></p>
+
+            </div>
+            <div class="col-6">
+              <div class="h6">Location</div>
+              <p><%= foundUser.profile.location %></p>
+
+            </div>
+            <div class="col-6">
+              <div class="h6">Joined On</div>
+              <p><%= foundUser.createdAt %></p>
+            </div>
+          </div>
+
+          <div class="h6">description</div>
+          <p><%= foundUser.note %></p>
+
+          <% if(foundUser.role == "buyer"){ %>
+            <div class="row">
+              <div class="col-6">
+                <div class="h6">Bank account number</div>
+                <p><%= foundUser.buyer.bank_account_no %></p>
+
+              </div>
+              <div class="col-6">
+                <div class="h6">Bank Sort Card</div>
+                <p><%= foundUser.buyer.bank_sort_card %></p>
+
+              </div>
+              <div class="col-6">
+                <div class="h6">Joined On</div>
+                <p><%= foundUser.createdAt %></p>
+              </div>
+            </div>
+          <% } %>
+
+
+         
+        </div>
+
+        
+      </div>
+    </div>
+  </div>
 </div>
 
 

@@ -1,0 +1,92 @@
+<% include ../partials/newAdminHeader %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <form class="card needs-validation" novalidate action="/admin/auction" method="POST">   
+        <div class="card-header">
+          <h3 class="card-title">Auction Registration Form</h3>
+        </div>
+        <div class="card-body">
+          
+          <div class="row">
+            <div class="col-md-12 order-md-1">
+
+              <div class="mb-3">
+                <input type="hidden" name="_csrf" value=<%= _csrf %> />
+                <label for="itemName">Name</label>
+                <input type="text" class="form-control" id="itemName" placeholder="Auction Name" value=""
+                  name="auction[name]" required>
+              </div>
+              
+              <div class="mb-3">
+                  
+                <label for="category">Theme type </label> <small><em>Select a type to use for the theme searcch later on</em></small>
+                <div class="selectgroup w-100">
+                  <label class="selectgroup-item" for="drawingCategory">
+                    <input type="radio" id="drawingCategory" name="auction[theme_type]" value="name"
+                      class="selectgroup-input" onclick="handleClick(this);" required>
+                    <span class="selectgroup-button">Name</span>
+                  </label>
+
+                  <label class="selectgroup-item" for="paintingCategory">
+                    <input type="radio" id="paintingCategory" name="auction[theme_type]" value="category"
+                      class="selectgroup-input" onclick="handleClick(this);" required>
+                    <span class="selectgroup-button">Category</span>
+                  </label>
+
+                  <label class="selectgroup-item" for="photoCategory">
+                    <input type="radio" id="photoCategory" name="auction[theme_type]" value="authorship"
+                      class="selectgroup-input" onclick="handleClick(this);" required>
+                    <span class="selectgroup-button">Artist</span>
+                  </label>
+
+                </div>
+
+
+              </div> <!-- theme type ends here-->
+
+              <div class="mb-3">
+                <label for="itemName">Theme</label>
+                <input type="text" class="form-control" id="itemName" placeholder="Auction Theme" value=""
+                  name="auction[theme]" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="itemName">Description</label>
+                <textarea class="form-control" id="itemName" name="auction[description]" required></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label for="itemName">Auction Location</label>
+                <input type="text" class="form-control" id="itemName" placeholder="Auction Location" value=""
+                  name="auction[location]" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="itemName">Date of Auction</label>
+                <input type="date" class="form-control" id="itemName" placeholder="Auction Date" value=""
+                  name="auction[date]" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="itemName">Auction Period <small>Morning/Afternoon/Evening</small></label>
+                <input type="text" class="form-control" id="itemName" placeholder="Morning/Afternoon/Evening" value=""
+                  name="auction[period]" required>
+              </div>
+
+              
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Create Auction</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+<!-- Category selection form input scripts -->
+<script src="/js/item-category-selection.js"></script>
+
+<!-- TODO: Enable the form validation script after the tests are complete -->
+<script src="/js/form-validation.js"></script>
+<% include ../partials/newAdminFooter %>

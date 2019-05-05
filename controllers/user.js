@@ -1,5 +1,5 @@
 var User = require("../models/User");
-
+const flash = require('express-flash');
 
 /* 
 * GET /admin/user
@@ -148,7 +148,7 @@ exports.postUser = (req, res, next) => {
       note: req.body.user.note,
 
       admin: {
-        post: req.body.user.admin_post,
+        post: req.user.admin_post,
       },
 
       buyer: {
@@ -193,3 +193,49 @@ exports.postUser = (req, res, next) => {
 
 }
 
+
+/* 
+ * PUT /admin/user/:id
+ * User Editing page
+ */
+exports.putUser = (req, res, next) => {
+
+  const updates = {
+    email: req.body.user.email,
+    password: req.body.user.password,
+    role: req.body.user.role,
+    verification_status: true,
+    profile: {
+      title: req.body.user.title,
+      fname: req.body.user.fname,
+      lname: req.body.user.lname,
+      location: req.body.user.location,
+      phone_number: req.body.user.phone_number,
+      picture: req.body.user.picture
+    },
+
+    note: req.body.user.note,
+
+    admin: {
+      post: req.user.admin_post,
+    },
+
+    buyer: {
+      approved_status: req.body.user.buyer_approved_status,
+      bank_account_no: req.body.user.buyer_bank_account_no,
+      bank_sort_card: req.body.user.buyer_bank_sort_card
+    }
+};
+
+
+  User.findByIdAndUpdate(req.params.id, updates, (err, updatedUser) => {
+        if(err) {return next(err);}
+        console.log("updatedUser");
+        console.log(updatedUser);
+        if(updatedUser){
+          console.log(updatedUser);
+          req.flash('success', { msg: 'User Successfully Updated.' });
+          res.redirect('/admin/user/' + updatedUser._id);
+        }
+    });
+}
