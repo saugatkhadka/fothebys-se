@@ -27,12 +27,6 @@ const itemSchema = new mongoose.Schema({
 		imageType: String,
 		materialUsed: String,
 		isFramed: Boolean,
-		// TODO: Make the form accept diff values for height, length and width
-		// dimensions: {
-		// 	height: Number,
-		// 	length: Number,
-		// 	width: Number
-		// },
 		dimension: String,
 		weight: Number
 	},
@@ -59,9 +53,6 @@ const itemSchema = new mongoose.Schema({
 	salesPrice: Number,
 	sold_on: Date,
 	sold: Boolean,
-	// appriaserName: String, // Use appraiser Object ID id possible
-	// dateAppraised: Date,
-
   notes: String,
   bids: [
 		{
