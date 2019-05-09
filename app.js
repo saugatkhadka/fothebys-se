@@ -145,20 +145,20 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use((req, res, next) => {
-  // After successful login, redirect back to the intended page
-  if (!req.user
-    && req.path !== '/login'
-    && req.path !== '/signup'
-    && !req.path.match(/^\/auth/)
-    && !req.path.match(/\./)) {
-    req.session.returnTo = req.originalUrl;
-  } else if (req.user
-    && (req.path === '/account' || req.path.match(/^\/api/))) {
-    req.session.returnTo = req.originalUrl;
-  }
-  next();
-});
+// app.use((req, res, next) => {
+//   // After successful login, redirect back to the intended page
+//   if (!req.user
+//     && req.path !== '/login'
+//     && req.path !== '/signup'
+//     && !req.path.match(/^\/auth/)
+//     && !req.path.match(/\./)) {
+//     req.session.returnTo = req.originalUrl;
+//   } else if (req.user
+//     && (req.path === '/account' || req.path.match(/^\/api/))) {
+//     req.session.returnTo = req.originalUrl;
+//   }
+//   next();
+// });
 
 
 // Middleware
@@ -166,7 +166,8 @@ const isAdmin = (req, res, next) => {
   if(req.user.role == 'admin'){
       return next();
   }
-  res.redirect("back");
+  req.flash('errors', { msg: 'You do not have the authorisation to view that page ' });
+  res.redirect("/");
 }
 
 
@@ -203,7 +204,7 @@ app.post('/admin/user', passportConfig.isAuthenticated, isAdmin, userController.
 app.get('/admin/user/new', passportConfig.isAuthenticated, isAdmin, userController.getNewUser); 
 app.put('/admin/user/:id', passportConfig.isAuthenticated, isAdmin, userController.putUser);
 
-app.get('/admin/user/:id', passportConfig.isAuthenticated, isAdmin, userController.getUser);
+app.get('/admin/user/:id', passportConfig.isAuthenticated, userController.getUser);
 app.delete("/admin/user/:id", passportConfig.isAuthenticated, isAdmin, userController.deleteUser);
 app.get('/admin/user/:id/edit', passportConfig.isAuthenticated, isAdmin, userController.getEditUser);
 

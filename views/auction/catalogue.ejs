@@ -6,27 +6,29 @@
           <table class="table card-table table-vcenter text-nowrap">
           <thead>
           <tr>
-                  <th class="w-1">Auction Name</th>
-                  <th>Item Name</th>
-                  <th>Bidder Name</th>
-                  <th>Opening Amt</th>
-                  <th>Maximum Amt</th>
-                  <th>Bidded on</th>
-                  <th></th>
-                  <th></th>
-              </tr>
+              <th>Auction Name</th>
+              <th>Item Name</th>
+              <th>Bidder Name</th>
+              <th>Opening Amt</th>
+              <th>Maximum Amt</th>
+              <th>Bidded on</th>
+              <!-- <th></th> -->
+              <!-- <th></th> -->
+          </tr>
           </thead>
           <tbody>
-          
+            <% if(bids){ %>
               <% bids.forEach((bid) => { %>
+              
               <tr>
                   <td><a href="/admin/auction/<%= bid.auction._id %>"><%= bid.auction.name %></a></td>
                   <td><a href="/admin/item/<%= bid.item._id %>"><%= bid.item.name %></a></td>
+                  <td><a href="/admin/user/<%= bid.bidder._id %>"><%= bid.bidder.profile.fname + ' '+ bid.bidder.profile.lname %></a></td>
                   <td><%= bid.opening_amount %></td>
                   <td><%= bid.maximum_amount %></td>
                   <td><%= new Date(bid.createdAt).toDateString(); %></td>
   
-                  <td class="text-right">
+                  <!-- <td class="text-right">
                       <a href="/admin/item/<%= bid._id %>/edit" class="btn btn-secondary btn-sm">Edit</a>
           
                       <div class="item-action dropdown">
@@ -37,7 +39,7 @@
                           </div>
                           
                       </div>
-                  </td>
+                  </td> -->
                   <td>
                       <a class="icon" href="javascript:void(0)">
                           
@@ -48,9 +50,9 @@
                       </a>
                   </td>
               </tr>
-          
               <% }); %>
-              
+            <% } %> 
+
           </tbody>
           
           </table>

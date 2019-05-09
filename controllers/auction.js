@@ -247,6 +247,7 @@ exports.postBidItemForm = (req, res, next) => {
  * commissionbids page
  */
 exports.getCommissionBids = (req, res, next) => {
+  var foundBids
   Bid.find({})
     .populate('auction')
     .populate('item')
@@ -257,13 +258,11 @@ exports.getCommissionBids = (req, res, next) => {
       }
       console.log("Found Bids");
       console.log(foundBids);
-      if (foundBids) {
         res.render('auction/catalogue', {
           title: 'Auction List',
           selectedTab: 'auction',
           bids: foundBids
         });
-      }
     });
 
 }

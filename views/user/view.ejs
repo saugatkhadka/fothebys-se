@@ -4,10 +4,10 @@
   <div class="row">
     <div class="col-lg-4">
       <div class="card card-profile">
-        <div class="card-header" style="background-image: url(/demo/photos/eberhard-grossgasteiger-311213-500.jpg);">
+        <div class="card-header" style="background-image: url(<%= foundUser.gravatar(60) %>);">
         </div>
         <div class="card-body text-center">
-          <img class="card-profile-img" src="/demo/faces/male/16.jpg">
+          <img class="card-profile-img" src="<%= user.gravatar(60) %>">
 
           <h3 class="mb-3"><%= foundUser.profile.fname + " " +  foundUser.profile.lname %></h3>
           <small><%= foundUser._id %></small>
@@ -31,10 +31,12 @@
           <%# <button class="btn btn-outline-primary btn-sm">
             Send Message
           </button> %>
-
+          <% if(user.role == 'admin'){ %>
           <a href="/admin/user/<%= foundUser._id%>/edit">
             <button class="btn btn-outline-primary btn-sm">Edit</button>
           </a>
+          <% } %>
+
         </div>
       </div>
     </div>

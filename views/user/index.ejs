@@ -26,7 +26,7 @@
                                 <th class="text-center w-1"><i class="icon-people"></i></th>
                                 <th>User</th>
                                 <th class="text-center">Role</th>
-                                <th>Activity</th>
+                                <th>Joined</th>
                                 <th></th>
                                 <th></th>
                             </tr>
@@ -51,8 +51,7 @@
                                     <div><%= foundUser.role %></div>
                                 </td>
                                 <td>
-                                    <div class="small text-muted">Last login</div>
-                                    <div>4 minutes ago</div>
+                                    <div><%= foundUser.createdAt %></div>
                                 </td>
                                 <td class="text-right">
                                   <a href="/admin/user/<%= foundUser._id %>/edit" class="btn btn-secondary btn-sm">Edit</a>

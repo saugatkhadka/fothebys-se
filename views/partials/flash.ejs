@@ -1,29 +1,30 @@
+
 <% if (messages.errors){ %>
-<div class="alert alert-danger fade show">
-    <button class="close" type="button" data-dismiss="alert"></button>
+<div class="alert alert-dismissible alert-danger">
+    <button type="button" class="close" data-dismiss="alert"></button>
 
     <% messages.errors.forEach((error) => { %>
         <div>
 
-            <%= error %>
+            <%= error.msg %>
         </div>
     <% }); %>
 </div>
 <% } else if (messages.info ) { %>
-<div class="alert alert-info fade show">
-    <button class="close" type="button" data-dismiss="alert"></button>
+<div class="alert alert-dismissible alert-info">
+    <button type="button" class="close" data-dismiss="alert"></button>
     <% messages.info.forEach( (info) => { %>
         <div>
-            <%= info %>
+            <%= info.msg %>
         </div>
     <% }); %>
 </div>
 <% } else if (messages.success ) { %>
-<div class="alert alert-success fade show">
-    <button class="close" type="button" data-dismiss="alert"></button>
+<div class="alert alert-dismissible alert-success">
+    <button type="button" class="close" data-dismiss="alert"></button>
     <% messages.success.forEach((success) =>{ %>
     <div>
-        <%= success %>
+        <%= success.msg %>
     </div>
     <% }); %>
 </div>

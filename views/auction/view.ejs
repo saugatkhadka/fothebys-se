@@ -65,7 +65,7 @@
   
                       <div class="d-flex align-items-center pt-5 mt-auto">
                         <div>
-                          <a href="./profile.html" class="text-default">Category <small><%= item.category %></small></a>
+                          <a href="javascript:void(0)" class="text-default">Category <small><%= item.category %></small></a>
                           <small class="d-block text-muted">Author <small><%= item.authorship %></small></small>
                         </div>
 
@@ -88,7 +88,8 @@
         </div>
       </div>
 
-    <div class="card">
+    <% if(user.role == 'admin'){ %>
+        <div class="card">
       <div class="card-header">
         <h3 class="card-title">Add Items</h3>
       </div>
@@ -142,6 +143,8 @@
         </div>
       </div>
     </div>
+    <% } %>
+
   </div>
 
   <!-- row cards end here -->
